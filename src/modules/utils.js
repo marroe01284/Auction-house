@@ -16,13 +16,7 @@ export async function apiRequest(url, method = "GET", body = null) {
   if (body) {
     options.body = JSON.stringify(body); // Add body for POST/PUT
   }
-
-  console.log("Request Details:");
-  console.log("URL:", url);
-  console.log("Method:", method);
-  console.log("Headers:", Array.from(options.headers.entries()));
-  console.log("Body:", body);
-
+  
   try {
     const response = await fetch(url, options);
 
