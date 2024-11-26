@@ -4,9 +4,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="../styles/main.css">
-    <script type="module" src="../scripts/profile.js"></script>
+    <style>
+      /* Add some basic styles for layout */
+      #edit-profile-section {
+        display: none; /* Hidden by default */
+        margin-top: 20px;
+      }
+  
+      #profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+      }
+  
+      #edit-message {
+        color: green;
+        display: none;
+        margin-top: 10px;
+      }
+  
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Profile</h1>
+      </header>
     
+      <!-- User Information Section -->
+      <section id="user-info">
+        <img id="profile-avatar" src="" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;" />
+        <h2 id="profile-name"></h2>
+        <p id="profile-email"></p>
+        <button id="edit-button">Edit Profile</button>
+      </section>
+
+      <section id="edit-profile-section">
+        <form id="edit-profile-form">
+          <label for="edit-avatar">Avatar URL:</label>
+          <input type="url" id="edit-avatar" name="edit-avatar" required />
+    
+          <button type="submit">Update Profile</button>
+        </form>
+        <div id="edit-message">Profile updated successfully!</div>
+      </section>
+    
+      <!-- Statistics Section -->
+      <section id="user-stats">
+        <h3>Statistics</h3>
+        <ul>
+          <li><strong>Credits:</strong> <span id="user-credits">0</span></li>
+          <li><strong>Wins:</strong> <span id="user-wins">0</span></li>
+          <li><strong>Bids:</strong> <span id="user-bids">0</span></li>
+        </ul>
+      </section>
+      <script type="module" src="../scripts/profile.js"></script>
 </body>
 </html>

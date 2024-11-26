@@ -28,7 +28,7 @@ registerForm.addEventListener("submit", async (event) => {
 
     // Save the access token and redirect
     localStorage.setItem("accessToken", response.data.accessToken);
-    window.location.href = "/profile.html";
+    window.location.href = "login.html";
   } catch (error) {
     console.error("Registration failed:", error);
     errorMessage.style.display = "block";
