@@ -4,9 +4,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auction</title>
     <link rel="stylesheet" href="../styles/main.css">
-    <script type="module" src="../api/auth.js"></script>
-</head>
-<body>
+    <style>
+    /* Basic card styling */
+    .auction-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+      cursor: pointer;
+    }
     
+    .auction-card:hover {
+      transform: scale(1.05);
+    }
+    
+    .auction-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    
+    .auction-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+    
+    .auction-description {
+      color: #555;
+      font-size: 0.9rem;
+    }
+    </style>
+</head>
+
+
+<body>
+  <header>
+    <h1>All Auctions</h1>
+    <button><a href="profile.html">profile</a></button>
+    <button><a href="create-listing.html">create</a></button>
+    
+  </header>
+
+  <!-- Listings Section -->
+  <section id="auction-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <!-- Cards will be dynamically injected here -->
+  </section>
+
+  <script type="module" src="../scripts/auction.js"></script>
 </body>
 </html>
