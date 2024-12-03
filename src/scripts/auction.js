@@ -1,6 +1,32 @@
 import { fetchAuctions, placeBid } from "../api/auctions.js";
+import { API_BASE } from "../api/constants.js";
+import { createNavBar, initializeNavBar } from "../components/header.js";
+import { createFooter } from "../components/footer.js";
+import { createModal } from "../components/modal.js";
+import { createAuctionCard } from "../components/auctionCard.js";
+
+document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
+document.body.insertAdjacentHTML("beforeend", createFooter());
+initializeNavBar();
+document.body.insertAdjacentHTML("beforeend", createModal("auction-modal", "Auction Details", "<p>Loading...</p>"));
 
 const auctionListings = document.getElementById("auction-listings");
+const modal = document.getElementById("auction-modal");
+const modalContent = modal.querySelector(".p-4");
+const modalClose = document.getElementById("auction-modal-close");
+const modalAction = document.getElementById("auction-modal-action");
+
+// Close modal event listener
+document.getElementById("auction-modal").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) {
+    document.getElementById("auction-modal").classList.remove("active");
+  }
+});
+
+// Close modal when clicking the 'X' button
+document.getElementById("auction-modal-close").addEventListener("click", () => {
+  document.getElementById("auction-modal").classList.remove("active");
+});
 
 // Fetch and display all auctions
 async function loadAuctions() {
@@ -21,84 +47,81 @@ async function loadAuctions() {
 
 // Render listings as cards
 function renderListings(listings) {
-    // Sort listings by `created` in descending order (newest first)
-    const sortedListings = listings.sort((a, b) => new Date(b.created) - new Date(a.created));
-  
-    auctionListings.innerHTML = sortedListings
-      .map((listing) => {
-        const imageUrl = listing.media?.[0]?.url || "default-image.png";
-        const description = listing.description || "No description available.";
-  
-        return `
-          <div class="auction-card" data-id="${listing.id}">
-            <img src="${imageUrl}" alt="${listing.title}" />
-            <h2 class="auction-title">${listing.title}</h2>
-            <p class="auction-description">${description}</p>
-            <p><strong>Bids:</strong> <span class="bid-count">${listing._count.bids || 0}</span></p>
-            <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleString()}</p>
-            <p><strong>Published:</strong> ${new Date(listing.created).toLocaleString()}</p>
-  
-            <!-- Bid Section -->
-            <div class="bid-section hidden">
-              <input type="number" class="bid-input" placeholder="Enter your bid" min="1" />
-              <button class="place-bid-btn">Place Bid</button>
-            </div>
-  
-            <!-- Bid Now Button -->
-            <button class="bid-now-btn">Bid Now</button>
-          </div>
-        `;
-      })
-      .join("");
-  
-    addBidEventListeners();
-  }
+  // Sort listings by `created` in descending order (newest first)
+  const sortedListings = listings.sort((a, b) => new Date(b.created) - new Date(a.created));
 
-// Add bid functionality to each card
-function addBidEventListeners() {
-  const cards = document.querySelectorAll(".auction-card");
+  auctionListings.innerHTML = sortedListings
+  .map((listing) => createAuctionCard(listing))
+  .join("");
 
-  cards.forEach((card) => {
-    const bidNowBtn = card.querySelector(".bid-now-btn");
-    const bidSection = card.querySelector(".bid-section");
-    const placeBidBtn = card.querySelector(".place-bid-btn");
-    const bidInput = card.querySelector(".bid-input");
-    const bidCount = card.querySelector(".bid-count");
+  bindAuctionCards();
+}
 
+// Bind auction cards to open the modal
+function bindAuctionCards() {
+  const auctionCards = document.querySelectorAll(".auction-card");
+
+  auctionCards.forEach((card) => {
     const auctionId = card.getAttribute("data-id");
+    card.addEventListener("click", () => loadAuctionDetails(auctionId));
+    console.log("Auction ID:", auctionId);
+  });
+}
 
-    // Toggle bid section visibility
-    bidNowBtn.addEventListener("click", () => {
-      bidSection.classList.toggle("hidden");
-    });
+// Load auction details into the modal
+async function loadAuctionDetails(auctionId) {
+  try {
+    console.log("Auction ID:", auctionId);
+    const url = `${API_BASE}/auction/listings/${auctionId}`;
+    console.log("Fetching Auction Details from:", url);
 
-    // Place a bid
-    placeBidBtn.addEventListener("click", async () => {
-      const bidAmount = Number(bidInput.value.trim());
+    modalContent.innerHTML = "<p>Loading...</p>";
+    modal.classList.add("active");
 
+    // Fetch auction details
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    const result = await response.json();
+    const auctionDetails = result.data; // Access the `data` key
+
+    // Populate modal content with auction details
+    modalContent.innerHTML = `
+      <h3 class="text-xl font-semibold mb-2">${auctionDetails.title}</h3>
+      <img src="${auctionDetails.media[0]?.url || 'default-image.png'}" alt="${auctionDetails.title}" class="w-full h-48 object-cover mb-4" />
+      <p>${auctionDetails.description || "No description available."}</p>
+      <p><strong>Current Bids:</strong> ${auctionDetails._count.bids || 0}</p>
+      <input
+        type="number"
+        id="bid-amount"
+        placeholder="Enter your bid"
+        class="w-full border rounded-lg p-2 mt-4"
+      />
+    `;
+
+    // Bind the bid functionality to the modal action button
+    modalAction.onclick = async () => {
+      const bidAmount = Number(document.getElementById("bid-amount").value.trim());
       if (bidAmount <= 0 || isNaN(bidAmount)) {
         alert("Please enter a valid bid amount.");
         return;
       }
 
       try {
-        const response = await placeBid(auctionId, bidAmount);
-        console.log("Bid placed successfully:", response);
-
-        // Update bid count in UI
-        bidCount.innerText = parseInt(bidCount.innerText) + 1;
-
-        // Clear and hide bid section
-        bidInput.value = "";
-        bidSection.classList.add("hidden");
-
-        alert("Your bid has been placed successfully!");
+        await placeBid(auctionId, bidAmount);
+        alert("Your bid was successfully placed!");
+        modal.classList.remove("active");
+        loadAuctions(); // Reload auctions to reflect updated bids
       } catch (error) {
         console.error("Failed to place bid:", error);
         alert("Failed to place bid. Please try again.");
       }
-    });
-  });
+    };
+  } catch (error) {
+    console.error("Failed to load auction details:", error);
+    modalContent.innerHTML = "<p>Failed to load auction details. Please try again later.</p>";
+  }
 }
 
 // Initial load

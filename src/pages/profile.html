@@ -1,69 +1,136 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="../styles/main.css">
-    <style>
-      /* Add some basic styles for layout */
-      #edit-profile-section {
-        display: none; /* Hidden by default */
-        margin-top: 20px;
-      }
-  
-      #profile-avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-      }
-  
-      #edit-message {
-        color: green;
-        display: none;
-        margin-top: 10px;
-      }
-  
-      button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        cursor: pointer;
-      }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Styling the layout */
+    /* .profile-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    } */
+
+    #profile-avatar {
+      display: flex;
+      justify-content: center;
+    }
+
+    .profile-info {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .edit-avatar-text {
+      margin-top: 10px;
+      color: #007bff;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .stats-chart-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .stats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 40%;
+    }
+
+    .stats-box {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-container {
+      width: 50%;
+    }
+
+    #avatar-edit-form {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Profile</h1>
-      </header>
-    
-      <!-- User Information Section -->
-      <section id="user-info">
-        <img id="profile-avatar" src="" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;" />
-        <h2 id="profile-name"></h2>
-        <p id="profile-email"></p>
-        <button id="edit-button">Edit Profile</button>
-      </section>
+  <h2 class="text-2xl font-bold mb-6 mt-6 text-center">Profile Information</h2>
+  <div class="flex items-center justify-center">
+    <img 
+    id="profile-avatar" 
+    src="default-avatar.png" 
+    alt="User Avatar" 
+    class="mb-6 w-24 h-24 rounded-full border border-gray-300"
+    />
+  </div>
+    <div class="profile-container max-w-4xl mx-auto mt-10 bg-white p-6 rounded-lg">
+    <!-- Form Section -->
+    <form id="profile-form" class="space-y-4">
+      <!-- Name -->
+      <div class="flex items-center justify-between border-b pb-2">
+        <label for="name" class="text-gray-600 font-medium w-1/3">Name</label>
+        <p id="profile-name" class="text-gray-800 w-2/3">Loading...</p>
+      </div>
+  
+      <!-- Username -->
+      <div class="flex items-center justify-between border-b pb-2">
+        <label for="username" class="text-gray-600 font-medium w-1/3">Username</label>
+        <p id="profile-username" class="text-gray-800 w-2/3">Loading...</p>
+      </div>
+  
+      <!-- Avatar URL -->
+      <div class="flex items-center justify-between">
+        <label for="avatar-url" class="text-gray-600 font-medium w-1/3">Avatar URL</label>
+        <div class="flex items-center space-x-4 w-2/3">
+          <input 
+            type="url" 
+            id="avatar-url" 
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+            placeholder="Enter new avatar URL"
+          />
+          <button 
+            type="submit" 
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+            Edit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <h1 class="text-center p-12 font-bold text-4xl ">Statistics</h1>
+  <div class="stats-chart-container">
+    <div class="stats-container">
+      <div class="stats-box">
+        <h3>Bids Won</h3>
+        <p id="user-wins">0</p>
+      </div>
+      <div class="stats-box">
+        <h3>Total Listings</h3>
+        <p id="user-bids">0</p>
+      </div>
+      <div class="stats-box">
+        <h3>Credits</h3>
+        <p id="user-credits">0</p>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="stats-chart"></canvas>
+    </div>
+  </div>
 
-      <section id="edit-profile-section">
-        <form id="edit-profile-form">
-          <label for="edit-avatar">Avatar URL:</label>
-          <input type="url" id="edit-avatar" name="edit-avatar" required />
-    
-          <button type="submit">Update Profile</button>
-        </form>
-        <div id="edit-message">Profile updated successfully!</div>
-      </section>
-    
-      <!-- Statistics Section -->
-      <section id="user-stats">
-        <h3>Statistics</h3>
-        <ul>
-          <li><strong>Credits:</strong> <span id="user-credits">0</span></li>
-          <li><strong>Wins:</strong> <span id="user-wins">0</span></li>
-          <li><strong>Bids:</strong> <span id="user-bids">0</span></li>
-        </ul>
-      </section>
-      <button><a href="auction.html">auction</a></button>
-      <script type="module" src="../scripts/profile.js"></script>
+  <script type="module" src="../scripts/profile.js"></script>
 </body>
 </html>
