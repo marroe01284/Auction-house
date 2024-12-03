@@ -1,0 +1,46 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <script type="module" src="../scripts/register.js"></script>
+</head>
+<body>
+    <h1>Register</h1>
+  <form id="register-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" pattern="^[a-zA-Z0-9_]+$" title="Only letters, numbers, and underscores are allowed" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" pattern="^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$" title="Must be a valid stud.noroff.no email address" required />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" minlength="8" title="Password must be at least 8 characters" required />
+
+    <label for="bio">Bio (optional, max 160 characters):</label>
+    <textarea id="bio" name="bio" maxlength="160"></textarea>
+
+    <label for="avatar-url">Avatar URL (optional):</label>
+    <input type="url" id="avatar-url" name="avatar-url" />
+
+    <label for="avatar-alt">Avatar Alt Text (optional, max 120 characters):</label>
+    <input type="text" id="avatar-alt" name="avatar-alt" maxlength="120" />
+
+    <label for="banner-url">Banner URL (optional):</label>
+    <input type="url" id="banner-url" name="banner-url" />
+
+    <label for="banner-alt">Banner Alt Text (optional, max 120 characters):</label>
+    <input type="text" id="banner-alt" name="banner-alt" maxlength="120" />
+
+    <label>
+      <input type="checkbox" id="venueManager" name="venueManager" /> Register as Venue Manager
+    </label>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="error-message" style="color: red; display: none;">Registration failed. Please try again.</div>
+  <script type="module" src="../scripts/register.js"></script>
+</body>
+</html>
