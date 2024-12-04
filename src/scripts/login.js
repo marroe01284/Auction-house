@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Display an error message to the user
       if (errorMessage) {
         errorMessage.style.display = "block";
-        errorMessage.innerText = "Login failed! Please try again.";
+        errorMessage.innerText = "Wrong E-mail or password, try again.";
       }
     }
   });
