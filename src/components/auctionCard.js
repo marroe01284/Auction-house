@@ -8,23 +8,24 @@
  * @param {Object} auction._count - Object containing counts (e.g., bids).
  * @param {string} auction.endsAt - The end time of the auction.
  * @param {string} auction.created - The creation time of the auction.
+ * @param {number} auction.highestBid - The highest bid amount.
  * @returns {string} - The HTML string for the auction card.
  */
-export function createAuctionCard({ id, title, description, media, _count, endsAt, created }) {
-    const imageUrl = media?.[0]?.url || "default-image.png";
-    const auctionDescription = description || "No description available.";
+export function createAuctionCard({ id, title, media, bids }) {
+  const imageUrl = media?.[0]?.url || "default-image.png";
   
-    return `
-      <div class="auction-card cursor-pointer border border-gray-300 rounded-lg shadow-md overflow-hidden" data-id="${id}">
-        <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" />
-        <div class="p-4">
-          <h2 class="text-lg font-bold mb-2">${title}</h2>
-          <p class="text-sm text-gray-600 mb-4">${auctionDescription}</p>
-          <p class="text-sm"><strong>Bids:</strong> ${_count.bids || 0}</p>
-          <p class="text-sm"><strong>Ends At:</strong> ${new Date(endsAt).toLocaleString()}</p>
-          <p class="text-sm"><strong>Published:</strong> ${new Date(created).toLocaleString()}</p>
-        </div>
+  // Calculate the highest bid amount from the `bids` array
+  const highestBidAmount = bids?.length
+    ? `$${Math.max(...bids.map((bid) => bid.amount)).toFixed(2)}`
+    : "No bids yet";
+
+  return `
+    <div class="auction-card" data-id="${id}">
+      <img src="${imageUrl}" alt="${title}" />
+      <div class="card-info">
+        <div class="card-title">${title}</div>
+        <div class="card-bid"><strong>Highest Bid:</strong> ${highestBidAmount}</div>
       </div>
-    `;
-  }
-  
+    </div>
+  `;
+}

@@ -110,3 +110,116 @@ button.learn-more:hover .button-text {
     --text-color: #fff; /* Text color on red buttons */
     --hover-text-color: #fff;
 }
+/* Auction Card Styling */
+.auction-card {
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 300px;
+  }
+  
+  .auction-card:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow */
+  }
+  
+  .auction-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6); /* Transparent background */
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .card-bid {
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  /* Horizontal Scrolling Containers */
+  .listing-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap scrolling for better UX */
+    gap: 2rem; /* Space between cards */
+    padding: 1rem 0; /* Add vertical padding */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+  }
+  
+  .listing-container::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
+  }
+  
+  .listing-container::-webkit-scrollbar-thumb {
+    background: #ccc; /* Light gray scrollbar */
+    border-radius: 4px; /* Rounded scrollbar thumb */
+  }
+  
+  .listing-container::-webkit-scrollbar-thumb:hover {
+    background: #aaa; /* Darker gray on hover */
+  }
+  
+  /* Modal Styling */
+  #auction-modal {
+    position: fixed;
+    inset: 0; /* Cover the full viewport */
+    display: none; /* Hidden by default */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 50; /* Layer above other content */
+  }
+  
+  #auction-modal.active {
+    display: flex; /* Show the modal */
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    width: 90%;
+    max-width: 600px; /* Max width for larger screens */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+  }
+  
+  .modal-content img {
+    width: 100%;
+    border-radius: 8px; /* Match modal's border radius */
+  }
+  
+  #auction-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  #auction-modal-close:hover {
+    color: #000; /* Change color on hover */
+  }
+  
