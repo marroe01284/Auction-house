@@ -92,26 +92,31 @@
   </div>
   
   <div class="border-t border-gray-300 my-4"></div>
-  <h2 class="text-center p-12 font-bold text-4xl ">Statistics</h2>
-  <div class="stats-chart-container">
-    <div class="stats-container">
-      <div class="stats-box">
-        <h3>Bids Won</h3>
-        <p id="user-wins">0</p>
+  <h2 class="text-center p-12 font-bold text-4xl">Statistics</h2>
+  
+  <div class="stats-chart-container flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between gap-12 max-w-4xl mx-auto px-4">
+    <!-- Statistics Section -->
+    <div class="stats-container grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 w-full lg:w-1/2">
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Bids Won</h3>
+        <p id="user-wins" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
-      <div class="stats-box">
-        <h3>Total Listings</h3>
-        <p id="user-bids">0</p>
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Total Listings</h3>
+        <p id="user-bids" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
-      <div class="stats-box">
-        <h3>Credits</h3>
-        <p id="user-credits">0</p>
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Credits</h3>
+        <p id="user-credits" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
     </div>
-    <div class="chart-container">
-      <canvas id="stats-chart"></canvas>
+  
+    <!-- Chart Section -->
+    <div class="chart-container w-full lg:w-1/2">
+      <canvas id="stats-chart" class="w-full"></canvas>
     </div>
   </div>
+  
 
   <script type="module" src="../scripts/profile.js"></script>
 </body>
