@@ -42,7 +42,7 @@ export function createNavBar() {
   
         <!-- Third Line: Navigation Links -->
         <nav class="container mx-auto py-4 px-6 flex justify-center relative">
-          <div class="flex space-x-6 relative">
+          <div class="flex space-x-6 relative gap-10">
             <!-- Underline -->
             <div class="absolute bottom-0 h-[2px] bg-black transition-all duration-300 ease-in-out" id="underline"></div>
   
