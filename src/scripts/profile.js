@@ -14,6 +14,7 @@ async function loadUserProfile() {
   try {
     const profile = await fetchUserProfile();
     console.log("User Profile Loaded:", profile);
+
     // Populate avatar image
     const avatarElement = document.getElementById("profile-avatar");
     avatarElement.src = profile.data.avatar?.url || "default-avatar.png";
@@ -25,16 +26,17 @@ async function loadUserProfile() {
     document.getElementById("avatar-url").value = profile.data.avatar?.url || "";
 
     // Populate statistics
-    document.getElementById("user-wins").innerText = profile.data._count?.wins || 0;
-    document.getElementById("user-bids").innerText = profile.data._count?.listings || 0;
-    document.getElementById("user-credits").innerText = profile.data.credits || 0;
-
-    // Generate stats chart
-    generateStatsChart({
+    const stats = {
       bids: profile.data._count?.listings || 0,
       wins: profile.data._count?.wins || 0,
       credits: profile.data.credits || 0,
-    });
+    };
+    document.getElementById("user-wins").innerText = stats.wins;
+    document.getElementById("user-bids").innerText = stats.bids;
+    document.getElementById("user-credits").innerText = stats.credits;
+
+    // Generate stats chart
+    generateStatsChart(stats);
   } catch (error) {
     console.error("Failed to load profile:", error);
     alert("Session expired. Please log in again.");
@@ -43,7 +45,51 @@ async function loadUserProfile() {
 }
 
 /**
- * Handle the avatar update form submission.
+ * Generate a donut chart with user statistics.
+ * @param {Object} stats - Object containing `bids`, `wins`, and `credits`.
+ */
+function generateStatsChart(stats) {
+  const ctx = document.getElementById("stats-chart").getContext("2d");
+
+  new Chart(ctx, {
+    type: "doughnut", // Donut chart
+    data: {
+      labels: ["Listings", "Wins", "Credits"], // Labels for the data points
+      datasets: [
+        {
+          label: "Statistics",
+          data: [stats.bids, stats.wins, stats.credits], // Data points
+          backgroundColor: ["#3b82f6", "#10b981", "#fbbf24"], // Tailwind colors for visual clarity
+          borderWidth: 2, // Border for each section
+        },
+      ],
+    },
+    options: {
+      responsive: true, // Makes the chart responsive
+      maintainAspectRatio: false, // Allows the chart to fit the container dynamically
+      plugins: {
+        legend: {
+          position: "bottom", // Moves the legend to the bottom
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const label = context.label || "";
+              const value = context.raw || 0;
+              return `${label}: ${value}`;
+            },
+          },
+        },
+      },
+      layout: {
+        padding: 20, // Adds padding inside the chart area
+      },
+    },
+  });
+}
+
+/**
+ * Handle avatar URL updates.
  */
 document.getElementById("profile-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -63,33 +109,6 @@ document.getElementById("profile-form").addEventListener("submit", async (event)
     alert("Failed to update avatar. Please try again.");
   }
 });
-
-/**
- * Generate the statistics chart.
- * @param {Object} stats - The statistics data.
- */
-function generateStatsChart(stats) {
-  const ctx = document.getElementById("stats-chart").getContext("2d");
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Bids", "Wins", "Credits"],
-      datasets: [
-        {
-          label: "Statistics",
-          data: [stats.bids, stats.wins, stats.credits],
-          backgroundColor: ["#3b82f6", "#10b981", "#fbbf24"], // Tailwind colors
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
 
 // Initial Profile Load
 loadUserProfile();
