@@ -48,7 +48,7 @@ export function createNavBar() {
   
             <!-- Links -->
             <a href="/src/pages/auction.html" class="nav-link text-gray-500 hover:text-black" data-index="0">Discover</a>
-            <a href="#" class="nav-link text-gray-500 hover:text-black" data-index="1">Wish List</a>
+            <a href="/src/pages/create-listing.html" class="nav-link text-gray-500 hover:text-black" data-index="1">Create Listing</a>
             <a href="#" class="nav-link text-gray-500 hover:text-black" data-index="2">My Bids</a>
             <a href="#" class="nav-link text-gray-500 hover:text-black" data-index="3">My Auction</a>
             <a href="#" class="nav-link text-gray-500 hover:text-black" data-index="4">History</a>
