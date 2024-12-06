@@ -25,7 +25,12 @@ export async function apiRequest(url, method = "GET", body = null) {
       throw new Error(`Error ${response.status}: ${errorDetails.message || response.statusText}`);
     }
 
-    return await response.json(); // Parse JSON response
+    // If DELETE or response status is 204 (No Content), don't parse JSON
+    if (method === "DELETE" || response.status === 204) {
+      return;
+    }
+
+    return await response.json(); // Parse JSON response for other methods
   } catch (error) {
     console.error(`API request to ${url} failed:`, error);
     throw error;
