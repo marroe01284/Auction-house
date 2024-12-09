@@ -15,12 +15,12 @@ export function createModal(id, title, content) {
         </div>
         <!-- Modal Footer -->
         <div class="flex justify-end border-t px-4 py-2">
-          <button id="${id}-action" class="learn-more green">
-            <span class="circle" aria-hidden="true">
-              <span class="icon arrow"></span>
-            </span>
-            <span class="button-text">Place Bid</span>
-          </button>
+          // <button id="${id}-action" class="learn-more green">
+          //   <span class="circle" aria-hidden="true">
+          //     <span class="icon arrow"></span>
+          //   </span>
+          //   <span class="button-text">Place Bid</span>
+          // </button>
         </div>
       </div>
     </div>

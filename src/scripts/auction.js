@@ -1,8 +1,8 @@
 import { fetchAuctions, placeBid } from "../api/auctions.js";
-import { API_BASE } from "../api/constants.js";
+import { API_BASE, API_AUCTION_SEARCH } from "../api/constants.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
 import { createFooter } from "../components/footer.js";
-import { createAuctionCard } from "../components/auctionCard.js";
+import { createAuctionCard, calculateTimeLeft } from "../components/auctionCard.js";
 
 // Insert Navbar and Footer
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
@@ -17,17 +17,34 @@ const sections = {
   "recently-published": document.getElementById("recently-published"),
 };
 
+// Search Results Section
+const searchInput = document.querySelector("input[type='text']");
+const searchResultsHeading = document.getElementById("search-results-heading");
+const searchResultsSection = document.getElementById("search-results");
+const searchResultsContainer = searchResultsSection.querySelector(".listing-container");
+
 /**
  * Fetch and render auctions.
  */
 async function loadAuctions() {
   try {
     const data = await fetchAuctions({ _bids: true, _seller: true });
-    const listings = data.data;
+    let listings = data.data;
 
     if (listings.length === 0) {
       Object.values(sections).forEach((section) => {
         section.innerHTML = `<p>No auctions available at the moment.</p>`;
+      });
+      return;
+    }
+
+    // Filter out expired listings
+    const now = new Date();
+    listings = listings.filter((listing) => new Date(listing.endsAt) > now);
+
+    if (listings.length === 0) {
+      Object.values(sections).forEach((section) => {
+        section.innerHTML = `<p>No active auctions available at the moment.</p>`;
       });
       return;
     }
@@ -40,6 +57,9 @@ async function loadAuctions() {
 
     // Bind auction cards after rendering
     bindAuctionCards();
+
+    // Start countdown timers
+    startCountdownTimers();
   } catch (error) {
     console.error("Failed to load auctions:", error);
     Object.values(sections).forEach((section) => {
@@ -59,7 +79,7 @@ function renderListingsByCategory(listings, sectionId, sortFn) {
   const sortedListings = [...listings].sort(sortFn).slice(0, 10);
 
   section.innerHTML = `
-    <div class="listing-container">
+    <div class="listing-container flex flex-row gap-4 overflow-x-auto">
       ${sortedListings.map((listing) => createAuctionCard(listing)).join("")}
     </div>
   `;
@@ -72,6 +92,57 @@ const sortByCreated = (a, b) => new Date(b.created) - new Date(a.created); // Ne
 const sortByEndingSoon = (a, b) => new Date(a.endsAt) - new Date(b.endsAt); // Closest ending first
 const sortByPopularity = (a, b) => (b._count?.bids || 0) - (a._count?.bids || 0); // Most bids first
 const sortByRecentlyPublished = (a, b) => new Date(b.created) - new Date(a.created); // Newest first
+
+/**
+ * Search bar functionality.
+ */
+searchInput.addEventListener("input", async (event) => {
+  const query = event.target.value.trim();
+
+  if (!query) {
+    searchResultsHeading.classList.add("hidden");
+    searchResultsSection.classList.add("hidden");
+    return;
+  }
+
+  try {
+    // Fetch search results
+    const url = `${API_AUCTION_SEARCH}${encodeURIComponent(query)}&_bids=true&_seller=true`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const listings = Array.isArray(data.data) ? data.data : [];
+    if (listings.length === 0) {
+      searchResultsHeading.classList.remove("hidden");
+      searchResultsHeading.innerText = `No results found for "${query}"`;
+      searchResultsSection.classList.add("hidden");
+      return;
+    }
+
+    // Populate search results
+    searchResultsHeading.classList.remove("hidden");
+    searchResultsHeading.innerText = `Search Results for "${query}"`;
+    searchResultsSection.classList.remove("hidden");
+    searchResultsContainer.innerHTML = listings.map((listing) => createAuctionCard(listing)).join("");
+
+    // Bind the cards to open the modal
+    bindSearchResultCards();
+  } catch (error) {
+    console.error("Failed to fetch search results:", error);
+    searchResultsHeading.classList.remove("hidden");
+    searchResultsHeading.innerText = "Failed to fetch search results.";
+    searchResultsSection.classList.add("hidden");
+  }
+});
+
+function bindSearchResultCards() {
+  const searchCards = document.querySelectorAll(".auction-card");
+
+  searchCards.forEach((card) => {
+    const auctionId = card.getAttribute("data-id");
+    card.addEventListener("click", () => loadAuctionDetails(auctionId));
+  });
+}
 
 /**
  * Bind auction cards to open the modal when clicked.
@@ -114,22 +185,34 @@ async function loadAuctionDetails(auctionId) {
 
     // Dynamically inject modal content
     modalContent.innerHTML = `
-      <h3 class="text-xl font-semibold mb-4 font-roboto">${auctionDetails.title}</h3>
-      <img src="${auctionDetails.media[0]?.url || 'default-image.png'}" alt="${auctionDetails.title}" class="w-full h-64 object-cover mb-4 rounded-lg" />
-      <p class="mb-2 font-roboto"><strong>Seller:</strong> ${auctionDetails.seller?.name || "Unknown"}</p>
-      <p class="mb-2 font-roboto"><strong>Description:</strong> ${auctionDetails.description || "No description provided."}</p>
-      <p class="mb-2 font-roboto"><strong>Highest Bid:</strong> $${highestBid}</p>
-      <p class="mb-2 font-roboto"><strong>Ends At:</strong> ${new Date(auctionDetails.endsAt).toLocaleString()}</p>
-
-      <div class="bid-section mt-4">
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- Left Section: Image -->
+    <div class="w-full md:w-1/2">
+      <img src="${auctionDetails.media[0]?.url || 'default-image.png'}" 
+        alt="${auctionDetails.title}" 
+        class="w-full h-full object-cover rounded-lg" />
+    </div>
+    <!-- Right Section: Content -->
+    <div class="w-full md:w-1/2 flex flex-col justify-between">
+      <div>
+        <h3 class="text-2xl font-bold mb-4">${auctionDetails.title}</h3>
+        <p class="text-gray-700 mb-4"><strong>Seller:</strong> ${auctionDetails.seller?.name || "Unknown"}</p>
+        <p class="text-gray-700 mb-4"><strong>Description:</strong> ${auctionDetails.description || "No description provided."}</p>
+        <p class="text-gray-700 mb-4"><strong>Highest Bid:</strong> $${highestBid}</p>
+      </div>
+      <!-- Bid Section -->
+      <div>
         <input
           type="number"
           id="bid-amount"
           placeholder="Enter your bid"
-          class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
         />
       </div>
-    `;
+    </div>
+  </div>
+`;
+
 
     // Bind the bid functionality to the action button
     modalAction.innerHTML = `
@@ -163,7 +246,6 @@ async function loadAuctionDetails(auctionId) {
   }
 }
 
-
 document.getElementById("auction-modal-close").addEventListener("click", () => {
   const modal = document.getElementById("auction-modal");
   modal.classList.remove("active");
@@ -175,5 +257,34 @@ document.getElementById("auction-modal").addEventListener("click", (event) => {
     modal.classList.remove("active");
   }
 });
-// Initial Load
+
+
+function removeExpiredListings() {
+  const listings = document.querySelectorAll(".auction-card");
+  listings.forEach((listing) => {
+    const timer = listing.querySelector(".countdown-timer");
+    if (timer && timer.textContent === "Expired") {
+      listing.remove(); // Remove expired listing from the DOM
+    }
+  });
+}
+
+function startCountdownTimers() {
+  setInterval(() => {
+    const timers = document.querySelectorAll(".countdown-timer");
+    timers.forEach((timer) => {
+      const endsAt = timer.getAttribute("data-ends-at");
+      timer.textContent = calculateTimeLeft(endsAt);
+    });
+
+    // Remove expired listings
+    removeExpiredListings();
+  }, 60000); // Update every 60 seconds
+}
+
 loadAuctions();
+
+
+
+
+

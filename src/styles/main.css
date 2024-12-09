@@ -107,7 +107,7 @@ button.learn-more:hover .button-text {
 .learn-more.red {
     --circle-bg: #f05a66; /* Red background */
     --hover-bg: #d11322;  /* Red hover background */
-    --text-color: #fff; /* Text color on red buttons */
+    --text-color: #282936; /* Text color on red buttons */
     --hover-text-color: #fff;
 }
 /* Auction Card Styling */
@@ -180,6 +180,7 @@ button.learn-more:hover .button-text {
   }
   
   /* Modal Styling */
+  
   #auction-modal {
     position: fixed;
     inset: 0; /* Cover the full viewport */
@@ -222,4 +223,11 @@ button.learn-more:hover .button-text {
   #auction-modal-close:hover {
     color: #000; /* Change color on hover */
   }
-  
+
+  .countdown-timer {
+    font-family: Roboto, sans-serif;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+  }
