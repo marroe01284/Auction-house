@@ -14,12 +14,10 @@
 export function createAuctionCard({ id, title, media, bids, endsAt }) {
   const imageUrl = media?.[0]?.url || "default-image.png";
 
-  // Calculate the highest bid amount from the `bids` array
   const highestBidAmount = bids?.length
     ? `$${Math.max(...bids.map((bid) => bid.amount)).toFixed(2)}`
     : "No bids yet";
 
-  // Format the time left for the countdown
   const timeLeft = new Date(endsAt) > new Date() ? calculateTimeLeft(new Date(endsAt)) : "Expired";
 
   return `

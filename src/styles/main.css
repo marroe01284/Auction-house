@@ -231,3 +231,35 @@ button.learn-more:hover .button-text {
     border-radius: 4px;
     text-align: center;
   }
+  .pagination-arrow {
+    z-index: 10; /* Ensure arrows are above listings */
+    opacity: 0.8; /* Slight transparency for better visuals */
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  .pagination-arrow:hover {
+    opacity: 1; /* Full opacity on hover */
+  }
+  
+  .prev-arrow {
+    left: 1.5rem; /* Adjust the distance from the left edge */
+  }
+  
+  .next-arrow {
+    right: 1.5rem; /* Adjust the distance from the right edge */
+  }
+  
+  .loader {
+    border-top-color: #3498db; /* Spinner color */
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

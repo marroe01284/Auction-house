@@ -45,7 +45,7 @@
 <body>
   <h2 class="text-4xl font-bold mb-6 mt-11 text-center">My Profile</h2>
   <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-8 max-w-6xl mx-auto px-4 mb-11 mt-11">
-    <!-- Profile Image Section -->
+
     <div class="flex flex-col items-center space-y-4">
       <img 
         id="profile-avatar" 
@@ -55,22 +55,20 @@
       />
     </div>
   
-    <!-- Profile Form Section -->
+
     <div class="profile-container w-full lg:w-2/3">
       <form id="profile-form" class="space-y-6">
-        <!-- Name -->
+
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4">
           <label for="name" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Name</label>
           <p id="profile-name" class="text-gray-800 w-full sm:w-2/3">Loading...</p>
         </div>
-  
-        <!-- Username -->
+
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4">
           <label for="username" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Username</label>
           <p id="profile-username" class="text-gray-800 w-full sm:w-2/3">Loading...</p>
         </div>
-  
-        <!-- Avatar URL -->
+
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
           <label for="avatar-url" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Avatar URL</label>
           <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-2/3">
@@ -96,7 +94,7 @@
   <h2 class="text-center p-12 font-bold text-4xl">Statistics</h2>
   
   <div class="stats-chart-container flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between gap-12 max-w-4xl mx-auto px-4">
-    <!-- Statistics Section -->
+
     <div class="stats-container grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 w-full lg:w-1/2">
       <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
         <h3 class="text-lg font-bold text-gray-600">Bids Won</h3>
@@ -112,7 +110,7 @@
       </div>
     </div>
   
-    <!-- Chart Section -->
+
     <div class="chart-container w-full lg:w-1/2">
       <canvas id="stats-chart" class="w-full"></canvas>
     </div>

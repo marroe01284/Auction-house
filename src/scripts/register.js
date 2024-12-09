@@ -4,7 +4,7 @@ const registerForm = document.getElementById("register-form");
 const errorMessage = document.getElementById("error-message");
 
 registerForm.addEventListener("submit", async (event) => {
-  event.preventDefault(); // Prevent form reload
+  event.preventDefault();
 
   const name = registerForm.name.value.trim();
   const email = registerForm.email.value.trim();

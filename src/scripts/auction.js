@@ -9,6 +9,11 @@ document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png
 document.body.insertAdjacentHTML("beforeend", createFooter());
 initializeNavBar();
 
+// Search Results Section
+const searchInput = document.querySelector("input[type='text']");
+const searchResultsHeading = document.getElementById("search-results-heading");
+const searchResultsSection = document.getElementById("search-results");
+const searchResultsContainer = searchResultsSection.querySelector(".listing-container");
 // Section Containers
 const sections = {
   "new-listings": document.getElementById("new-listings"),
@@ -16,18 +21,22 @@ const sections = {
   "popular": document.getElementById("popular"),
   "recently-published": document.getElementById("recently-published"),
 };
+ // Pagination State
+const paginationState = {
+  "new-listings": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "ending-soon": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "popular": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "recently-published": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+};
 
-// Search Results Section
-const searchInput = document.querySelector("input[type='text']");
-const searchResultsHeading = document.getElementById("search-results-heading");
-const searchResultsSection = document.getElementById("search-results");
-const searchResultsContainer = searchResultsSection.querySelector(".listing-container");
 
 /**
  * Fetch and render auctions.
  */
 async function loadAuctions() {
   try {
+    loader.classList.remove("hidden");
+
     const data = await fetchAuctions({ _bids: true, _seller: true });
     let listings = data.data;
 
@@ -49,11 +58,11 @@ async function loadAuctions() {
       return;
     }
 
-    // Render listings by category
-    renderListingsByCategory(listings, "new-listings", sortByCreated);
-    renderListingsByCategory(listings, "ending-soon", sortByEndingSoon);
-    renderListingsByCategory(listings, "popular", sortByPopularity);
-    renderListingsByCategory(listings, "recently-published", sortByRecentlyPublished);
+    // Render listings by category with pagination
+    renderListingsByCategoryWithPagination(listings, "new-listings", sortByCreated);
+    renderListingsByCategoryWithPagination(listings, "ending-soon", sortByEndingSoon);
+    renderListingsByCategoryWithPagination(listings, "popular", sortByPopularity);
+    renderListingsByCategoryWithPagination(listings, "recently-published", sortByRecentlyPublished);
 
     // Bind auction cards after rendering
     bindAuctionCards();
@@ -65,37 +74,144 @@ async function loadAuctions() {
     Object.values(sections).forEach((section) => {
       section.innerHTML = `<p>Failed to load auctions. Please try again later.</p>`;
     });
+  }finally {
+    // Hide loader
+    loader.classList.add("hidden");
   }
 }
 
 /**
- * Render listings into a specific section.
+ * Render listings into a specific section with pagination controls.
  * @param {Array} listings - Array of auction listings.
  * @param {string} sectionId - The section to render into.
  * @param {Function} sortFn - Sorting function for the category.
  */
-function renderListingsByCategory(listings, sectionId, sortFn) {
+function renderListingsByCategoryWithPagination(listings, sectionId, sortFn) {
   const section = sections[sectionId];
-  const sortedListings = [...listings].sort(sortFn).slice(0, 10);
+  const state = paginationState[sectionId];
+  const sortedListings = [...listings].sort(sortFn);
+  const totalItems = sortedListings.length;
+  const totalPages = Math.ceil(totalItems / state.itemsPerPage);
 
+  // Calculate current page's listings
+  const start = (state.currentPage - 1) * state.itemsPerPage;
+  const end = start + state.itemsPerPage;
+  const paginatedListings = sortedListings.slice(start, end);
+
+  // Render listings and pagination controls
   section.innerHTML = `
-    <div class="listing-container flex flex-row gap-4 overflow-x-auto">
-      ${sortedListings.map((listing) => createAuctionCard(listing)).join("")}
+    <div class="relative flex items-center">
+      <!-- Left Arrow -->
+      <button 
+        class="pagination-arrow prev-arrow absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-4 shadow-lg text-2xl"
+        data-section="${sectionId}">
+        &#8592;
+      </button>
+      
+      <!-- Listings -->
+      <div class="listing-container flex flex-row gap-4 overflow-x-hidden flex-grow px-8 transition-transform duration-500 ease-in-out">
+        ${paginatedListings.map((listing) => createAuctionCard(listing)).join("")}
+      </div>
+      
+      <!-- Right Arrow -->
+      <button 
+        class="pagination-arrow next-arrow absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-4 shadow-lg text-2xl"
+        data-section="${sectionId}">
+        &#8594;
+      </button>
     </div>
   `;
+
+  // Bind auction cards to open modal
+  bindAuctionCards();
+
+  // Attach arrow click events
+  attachPaginationArrows(sectionId, listings, sortFn, totalPages);
+}
+
+/**
+ * Attach events to the pagination arrow buttons.
+ * @param {string} sectionId - Section ID.
+ * @param {Array} listings - Listings for the section.
+ * @param {Function} sortFn - Sorting function.
+ * @param {number} totalPages - Total pages.
+ */
+function attachPaginationArrows(sectionId, listings, sortFn, totalPages) {
+  const section = sections[sectionId];
+  const prevArrow = section.querySelector(".prev-arrow");
+  const nextArrow = section.querySelector(".next-arrow");
+  const state = paginationState[sectionId];
+  const listingContainer = section.querySelector(".listing-container");
+
+  prevArrow?.addEventListener("click", () => {
+    const oldPage = state.currentPage;
+    if (state.currentPage > 1) {
+      state.currentPage--;
+    } else {
+      state.currentPage = totalPages; // Loop to the last page
+    }
+    slideToPage(oldPage, state.currentPage, listingContainer, () =>
+      renderListingsByCategoryWithPagination(listings, sectionId, sortFn)
+    );
+  });
+
+  nextArrow?.addEventListener("click", () => {
+    const oldPage = state.currentPage;
+    if (state.currentPage < totalPages) {
+      state.currentPage++;
+    } else {
+      state.currentPage = 1; // Loop back to the first page
+    }
+    slideToPage(oldPage, state.currentPage, listingContainer, () =>
+      renderListingsByCategoryWithPagination(listings, sectionId, sortFn)
+    );
+  });
+}
+
+/**
+ * Slide to the next or previous page with animation.
+ * @param {number} oldPage - Previous page number.
+ * @param {number} newPage - New page number.
+ * @param {HTMLElement} container - The listings container element.
+ * @param {Function} onAnimationEnd - Callback function to execute after animation.
+ */
+function slideToPage(oldPage, newPage, container, onAnimationEnd) {
+  const direction = newPage > oldPage ? -1 : 1;
+  container.style.transform = `translateX(${direction * 100}%)`;
+  setTimeout(() => {
+    container.style.transition = "none"; // Remove animation
+    container.style.transform = `translateX(${direction * -100}%)`; // Reset to opposite
+    onAnimationEnd();
+    setTimeout(() => {
+      container.style.transition = ""; // Restore animation
+      container.style.transform = "translateX(0)"; // Reset to neutral
+    });
+  }, 500); // Match the animation duration  
 }
 
 /**
  * Sorting functions for different categories.
  */
-const sortByCreated = (a, b) => new Date(b.created) - new Date(a.created); // Newest first
+const sortByCreated = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
 const sortByEndingSoon = (a, b) => new Date(a.endsAt) - new Date(b.endsAt); // Closest ending first
 const sortByPopularity = (a, b) => (b._count?.bids || 0) - (a._count?.bids || 0); // Most bids first
-const sortByRecentlyPublished = (a, b) => new Date(b.created) - new Date(a.created); // Newest first
+const sortByRecentlyPublished = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
+
+/**
+ * Bind auction cards to open the modal when clicked.
+ */
+function bindAuctionCards() {
+  const auctionCards = document.querySelectorAll(".auction-card");
+
+  auctionCards.forEach((card) => {
+    const auctionId = card.getAttribute("data-id");
+    card.addEventListener("click", () => loadAuctionDetails(auctionId));
+  });
+}
 
 /**
  * Search bar functionality.
- */
+*/
 searchInput.addEventListener("input", async (event) => {
   const query = event.target.value.trim();
 
@@ -143,19 +259,6 @@ function bindSearchResultCards() {
     card.addEventListener("click", () => loadAuctionDetails(auctionId));
   });
 }
-
-/**
- * Bind auction cards to open the modal when clicked.
- */
-function bindAuctionCards() {
-  const auctionCards = document.querySelectorAll(".auction-card");
-
-  auctionCards.forEach((card) => {
-    const auctionId = card.getAttribute("data-id");
-    card.addEventListener("click", () => loadAuctionDetails(auctionId));
-  });
-}
-
 /**
  * Load auction details and display them in a modal.
  * @param {string} auctionId - The ID of the auction to load.
@@ -283,8 +386,3 @@ function startCountdownTimers() {
 }
 
 loadAuctions();
-
-
-
-
-
