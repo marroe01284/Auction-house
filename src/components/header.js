@@ -1,5 +1,4 @@
 export function createNavBar() {
-    // Get avatar URL from localStorage
     const userAvatarUrl = localStorage.getItem("userAvatar") || "default-avatar.png";
   
     return `

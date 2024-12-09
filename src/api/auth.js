@@ -1,8 +1,7 @@
 import { API_AUTH_LOGIN, API_AUTH_REGISTER } from './constants.js';
 import { apiPost } from '../modules/utils.js';
 
-
-//Login
+//login
 
 export async function apiLogin({ email, password }) {
     return await apiPost(API_AUTH_LOGIN, { email, password });

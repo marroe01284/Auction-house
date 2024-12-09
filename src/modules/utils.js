@@ -10,34 +10,32 @@ import { headers } from "../api/headers.js";
 export async function apiRequest(url, method = "GET", body = null) {
   const options = {
     method,
-    headers: headers(), // Dynamic headers
+    headers: headers(),
   };
 
   if (body) {
-    options.body = JSON.stringify(body); // Add body for POST/PUT
+    options.body = JSON.stringify(body);
   }
 
   try {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorDetails = await response.json().catch(() => ({})); // Handle empty/error JSON responses
+      const errorDetails = await response.json().catch(() => ({}));
       throw new Error(`Error ${response.status}: ${errorDetails.message || response.statusText}`);
     }
 
-    // If DELETE or response status is 204 (No Content), don't parse JSON
     if (method === "DELETE" || response.status === 204) {
       return;
     }
 
-    return await response.json(); // Parse JSON response for other methods
+    return await response.json();
   } catch (error) {
     console.error(`API request to ${url} failed:`, error);
     throw error;
   }
 }
 
-// Helper functions for specific HTTP methods
 
 /**
  * GET request
