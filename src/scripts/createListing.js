@@ -1,11 +1,11 @@
 import { createListing } from "../api/auctions.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
-
+import { createFooter } from "../components/footer.js";
 const form = document.getElementById("create-listing-form");
 const message = document.getElementById("message");
 
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
-
+document.body.insertAdjacentHTML("beforeend", createFooter());
 initializeNavBar();
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

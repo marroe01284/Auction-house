@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Access Token Stored:", localStorage.getItem("accessToken"));
       console.log("User Name Stored:", localStorage.getItem("userName"));
 
-      window.location.href = "/src/pages/profile.html";
+      window.location.href = "/src/pages/auction.html";
     } catch (error) {
       console.error("Login failed:", error);
 

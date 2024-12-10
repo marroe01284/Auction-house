@@ -2,8 +2,9 @@ import { createNavBar, initializeNavBar } from "../components/header.js";
 import { updateAuction, deleteAuction } from "../api/auctions.js";
 import { fetchProfileListings } from "../api/profiles.js";
 import { API_BASE } from "../api/constants.js";
+import { createFooter } from "../components/footer.js";
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
-
+document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
 
 async function loadMyAuctions() {
