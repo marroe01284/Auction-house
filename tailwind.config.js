@@ -12,6 +12,7 @@ module.exports = {
         "card-3": "#979db2",
         "card-2": "#b1bc94",
         "card-1": "#a99182",
+        "card-0":"#e2e2e2",
         "background-color": "#ffffff",
         "info-color": "#d9d9d9",
         "discard-active": "#f05a66",

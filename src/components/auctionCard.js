@@ -21,7 +21,7 @@ export function createAuctionCard({ id, title, media, bids, endsAt }) {
   const timeLeft = new Date(endsAt) > new Date() ? calculateTimeLeft(new Date(endsAt)) : "Expired";
 
   return `
-    <div class="auction-card relative cursor-pointer border border-gray-300 rounded-lg shadow-md overflow-hidden" data-id="${id}">
+    <div class="auction-card relative cursor-pointer bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden" data-id="${id}">
       <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" />
       <div class="p-4">
         <h2 class="text-lg font-bold mb-2">${title}</h2>
