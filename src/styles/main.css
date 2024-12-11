@@ -112,7 +112,7 @@ button.learn-more:hover .button-text {
 }
 /* Auction Card Styling */
 .auction-card {
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
@@ -199,7 +199,7 @@ button.learn-more:hover .button-text {
     background-color: #fff;
     border-radius: 8px;
     padding: 16px;
-    width: 90%;
+    width: 100%;
     max-width: 600px; /* Max width for larger screens */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     text-align: center;
@@ -250,7 +250,7 @@ button.learn-more:hover .button-text {
   }
   
   .loader {
-    border-top-color: #3498db; /* Spinner color */
+    border-top-color: #1fc16b; /* Spinner color */
     animation: spin 1s linear infinite;
   }
   

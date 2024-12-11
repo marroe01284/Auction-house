@@ -1,6 +1,6 @@
 export function createFooter() {
     return `
-      <footer class="bg-card-0 text-black py-6">
+      <footer class="bg-card-0 text-black py-6 mt-6">
         <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
           <!-- Company Name -->
           <div class="mb-4 md:mb-0">

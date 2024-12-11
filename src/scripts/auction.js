@@ -3,25 +3,26 @@ import { API_BASE, API_AUCTION_SEARCH } from "../api/constants.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
 import { createFooter } from "../components/footer.js";
 import { createAuctionCard, calculateTimeLeft } from "../components/auctionCard.js";
+import { checkIfLoggedIn } from "../modules/auth.js";
 
-// Insert Navbar and Footer
+
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
-document.body.insertAdjacentHTML("beforeend", createFooter());
+document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
 
-// Search Results Section
+
 const searchInput = document.querySelector("input[type='text']");
 const searchResultsHeading = document.getElementById("search-results-heading");
 const searchResultsSection = document.getElementById("search-results");
 const searchResultsContainer = searchResultsSection.querySelector(".listing-container");
-// Section Containers
+
 const sections = {
   "new-listings": document.getElementById("new-listings"),
   "ending-soon": document.getElementById("ending-soon"),
   "popular": document.getElementById("popular"),
   "recently-published": document.getElementById("recently-published"),
 };
- // Pagination State
+
 const paginationState = {
   "new-listings": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
   "ending-soon": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
@@ -29,10 +30,6 @@ const paginationState = {
   "recently-published": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
 };
 
-
-/**
- * Fetch and render auctions.
- */
 async function loadAuctions() {
   try {
     loader.classList.remove("hidden");
@@ -47,7 +44,6 @@ async function loadAuctions() {
       return;
     }
 
-    // Filter out expired listings
     const now = new Date();
     listings = listings.filter((listing) => new Date(listing.endsAt) > now);
 
@@ -58,16 +54,13 @@ async function loadAuctions() {
       return;
     }
 
-    // Render listings by category with pagination
     renderListingsByCategoryWithPagination(listings, "new-listings", sortByCreated);
     renderListingsByCategoryWithPagination(listings, "ending-soon", sortByEndingSoon);
     renderListingsByCategoryWithPagination(listings, "popular", sortByPopularity);
     renderListingsByCategoryWithPagination(listings, "recently-published", sortByRecentlyPublished);
 
-    // Bind auction cards after rendering
     bindAuctionCards();
 
-    // Start countdown timers
     startCountdownTimers();
   } catch (error) {
     console.error("Failed to load auctions:", error);
@@ -75,7 +68,7 @@ async function loadAuctions() {
       section.innerHTML = `<p>Failed to load auctions. Please try again later.</p>`;
     });
   }finally {
-    // Hide loader
+
     loader.classList.add("hidden");
   }
 }
@@ -93,14 +86,12 @@ function renderListingsByCategoryWithPagination(listings, sectionId, sortFn) {
   const totalItems = sortedListings.length;
   const totalPages = Math.ceil(totalItems / state.itemsPerPage);
 
-  // Calculate current page's listings
   const start = (state.currentPage - 1) * state.itemsPerPage;
   const end = start + state.itemsPerPage;
   const paginatedListings = sortedListings.slice(start, end);
 
-  // Render listings and pagination controls
   section.innerHTML = `
-    <div class="relative flex items-center">
+    <div class="relative flex items-center px-6">
       <!-- Left Arrow -->
       <button 
         class="pagination-arrow prev-arrow absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-4 shadow-lg text-2xl"
@@ -122,10 +113,9 @@ function renderListingsByCategoryWithPagination(listings, sectionId, sortFn) {
     </div>
   `;
 
-  // Bind auction cards to open modal
+  
   bindAuctionCards();
 
-  // Attach arrow click events
   attachPaginationArrows(sectionId, listings, sortFn, totalPages);
 }
 
@@ -148,7 +138,7 @@ function attachPaginationArrows(sectionId, listings, sortFn, totalPages) {
     if (state.currentPage > 1) {
       state.currentPage--;
     } else {
-      state.currentPage = totalPages; // Loop to the last page
+      state.currentPage = totalPages;
     }
     slideToPage(oldPage, state.currentPage, listingContainer, () =>
       renderListingsByCategoryWithPagination(listings, sectionId, sortFn)
@@ -160,7 +150,7 @@ function attachPaginationArrows(sectionId, listings, sortFn, totalPages) {
     if (state.currentPage < totalPages) {
       state.currentPage++;
     } else {
-      state.currentPage = 1; // Loop back to the first page
+      state.currentPage = 1;
     }
     slideToPage(oldPage, state.currentPage, listingContainer, () =>
       renderListingsByCategoryWithPagination(listings, sectionId, sortFn)
@@ -179,27 +169,23 @@ function slideToPage(oldPage, newPage, container, onAnimationEnd) {
   const direction = newPage > oldPage ? -1 : 1;
   container.style.transform = `translateX(${direction * 100}%)`;
   setTimeout(() => {
-    container.style.transition = "none"; // Remove animation
-    container.style.transform = `translateX(${direction * -100}%)`; // Reset to opposite
+    container.style.transition = "none";
+    container.style.transform = `translateX(${direction * -100}%)`;
     onAnimationEnd();
     setTimeout(() => {
-      container.style.transition = ""; // Restore animation
-      container.style.transform = "translateX(0)"; // Reset to neutral
+      container.style.transition = "";
+      container.style.transform = "translateX(0)";
     });
-  }, 500); // Match the animation duration  
+  }, 500); 
 }
 
-/**
- * Sorting functions for different categories.
- */
+
 const sortByCreated = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
 const sortByEndingSoon = (a, b) => new Date(a.endsAt) - new Date(b.endsAt); // Closest ending first
 const sortByPopularity = (a, b) => (b._count?.bids || 0) - (a._count?.bids || 0); // Most bids first
 const sortByRecentlyPublished = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
 
-/**
- * Bind auction cards to open the modal when clicked.
- */
+
 function bindAuctionCards() {
   const auctionCards = document.querySelectorAll(".auction-card");
 
@@ -209,9 +195,7 @@ function bindAuctionCards() {
   });
 }
 
-/**
- * Search bar functionality.
-*/
+
 searchInput.addEventListener("input", async (event) => {
   const query = event.target.value.trim();
 
@@ -222,7 +206,6 @@ searchInput.addEventListener("input", async (event) => {
   }
 
   try {
-    // Fetch search results
     const url = `${API_AUCTION_SEARCH}${encodeURIComponent(query)}&_bids=true&_seller=true`;
     const response = await fetch(url);
     const data = await response.json();
@@ -235,13 +218,13 @@ searchInput.addEventListener("input", async (event) => {
       return;
     }
 
-    // Populate search results
+
     searchResultsHeading.classList.remove("hidden");
     searchResultsHeading.innerText = `Search Results for "${query}"`;
     searchResultsSection.classList.remove("hidden");
     searchResultsContainer.innerHTML = listings.map((listing) => createAuctionCard(listing)).join("");
 
-    // Bind the cards to open the modal
+
     bindSearchResultCards();
   } catch (error) {
     console.error("Failed to fetch search results:", error);
@@ -272,7 +255,7 @@ async function loadAuctionDetails(auctionId) {
     modalContent.innerHTML = "<p>Loading...</p>";
     modal.classList.add("active");
 
-    const url = `${API_BASE}/auction/listings/${auctionId}?_bids=true`; // Ensure `_bids=true` is included
+    const url = `${API_BASE}/auction/listings/${auctionId}?_bids=true&_seller=true`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -281,12 +264,11 @@ async function loadAuctionDetails(auctionId) {
     const result = await response.json();
     const auctionDetails = result.data;
 
-    // Calculate the highest bid
+  
     const highestBid = auctionDetails.bids.length > 0 
       ? Math.max(...auctionDetails.bids.map((bid) => bid.amount)) 
       : 0;
 
-    // Dynamically inject modal content
     modalContent.innerHTML = `
   <div class="flex flex-col md:flex-row gap-6">
     <!-- Left Section: Image -->
@@ -317,7 +299,6 @@ async function loadAuctionDetails(auctionId) {
 `;
 
 
-    // Bind the bid functionality to the action button
     modalAction.innerHTML = `
       <span class="circle" aria-hidden="true">
         <span class="icon arrow"></span>
@@ -326,6 +307,9 @@ async function loadAuctionDetails(auctionId) {
     `;
     modalAction.className = "learn-more green";
     modalAction.onclick = async () => {
+      if (checkIfLoggedIn()){
+        return;
+      }
       const bidAmount = Number(document.getElementById("bid-amount").value.trim());
       if (bidAmount <= 0 || isNaN(bidAmount)) {
         alert("Please enter a valid bid amount.");
@@ -336,7 +320,7 @@ async function loadAuctionDetails(auctionId) {
         await placeBid(auctionId, bidAmount);
         alert("Your bid was successfully placed!");
         modal.classList.remove("active");
-        loadAuctions(); // Reload auctions to reflect updated bids
+        loadAuctions();
       } catch (error) {
         console.error("Failed to place bid:", error);
         alert("Failed to place bid. Please try again.");
@@ -353,7 +337,7 @@ document.getElementById("auction-modal-close").addEventListener("click", () => {
   const modal = document.getElementById("auction-modal");
   modal.classList.remove("active");
 });
-// Close the modal when clicking outside the modal content
+
 document.getElementById("auction-modal").addEventListener("click", (event) => {
   if (event.target === event.currentTarget) {
     const modal = document.getElementById("auction-modal");
@@ -367,7 +351,7 @@ function removeExpiredListings() {
   listings.forEach((listing) => {
     const timer = listing.querySelector(".countdown-timer");
     if (timer && timer.textContent === "Expired") {
-      listing.remove(); // Remove expired listing from the DOM
+      listing.remove();
     }
   });
 }
@@ -380,9 +364,8 @@ function startCountdownTimers() {
       timer.textContent = calculateTimeLeft(endsAt);
     });
 
-    // Remove expired listings
     removeExpiredListings();
-  }, 60000); // Update every 60 seconds
+  }, 60000);
 }
 
 loadAuctions();
