@@ -54,9 +54,9 @@ export function createNavBar() {
         <!-- Links -->
         <a href="/src/pages/auction.html" class="nav-link text-gray-500 hover:text-black" data-index="0">Discover</a>
         <a href="/src/pages/create-listing.html" class="nav-link text-gray-500 hover:text-black" data-index="1">Create Listing</a>
-        <a href="/src/pages/user-listings.html" class="nav-link text-gray-500 hover:text-black" data-index="3">My Auction</a>
+        <a href="/src/pages/my-auction.html" class="nav-link text-gray-500 hover:text-black" data-index="3">My Auction</a>
         <a href="/src/pages/profile.html" class="nav-link text-gray-500 hover:text-black" data-index="3">Profile</a>
-        <a href="/src/pages/login.html" class="nav-link text-gray-500 hover:text-black" data-index="5">Log out</a>
+        <a href="/src/pages/login.html" class="nav-link text-gray-500 hover:text-black" data-action="logout">Log out</a>
       </nav>
       <!-- Mobile Dropdown Menu -->
       <div id="mobile-menu" class="hidden bg-white shadow-lg md:hidden">
@@ -76,7 +76,7 @@ export function createNavBar() {
     const underline = document.getElementById("underline");
     const hamburgerMenu = document.getElementById("hamburger-menu");
     const mobileMenu = document.getElementById("mobile-menu");
-
+    const logoutButton = document.querySelector('[data-action="logout"]');
     const currentPage = window.location.pathname;
     if (currentPage.includes("auction.html")) {
       searchBarContainer?.classList.remove("hidden");
@@ -113,5 +113,14 @@ export function createNavBar() {
       mobileMenu.classList.remove("open");
     }
   });
+  if (logoutButton) {
+    logoutButton.addEventListener("click", (e) => {
+      // Clear local storage
+      localStorage.clear();
+
+      // Redirect to login page
+      window.location.href = "/src/pages/login.html";
+    });
+  }
   }
   

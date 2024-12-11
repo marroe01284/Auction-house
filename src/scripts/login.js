@@ -18,11 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = loginForm.password.value.trim();
 
     console.log("Login attempt with:", { email, password });
-
+    if (!email || !password) {
+      errorMessage.style.display = "block";
+      errorMessage.innerText = "Email and password are required.";
+      return;
+    }
     try {
       const response = await apiLogin({ email, password });
       console.log("Login successful:", response);
-
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("userName", response.data.name);
       localStorage.setItem("userAvatar", response.data.avatar?.url || "default-avatar.png");
