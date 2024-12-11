@@ -1,11 +1,11 @@
 import { fetchUserProfile, updateUserAvatar } from "../api/profiles.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
 import { createFooter } from "../components/footer.js";
-
+import { checkIfLoggedIn } from "../modules/auth.js";
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
-document.body.insertAdjacentHTML("beforeend", createFooter());
+document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
-
+checkIfLoggedIn();
 
 async function loadUserProfile() {
   try {
@@ -32,7 +32,7 @@ async function loadUserProfile() {
     generateStatsChart(stats);
   } catch (error) {
     console.error("Failed to load profile:", error);
-    alert("Session expired. Please log in again.");
+    alert("You dont have a registered profile, please log in or register!");
     window.location.href = "/src/pages/login.html";
   }
 }

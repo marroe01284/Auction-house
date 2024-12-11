@@ -9,6 +9,9 @@ module.exports = {
       colors: {
         validate: "#84ebb4",
         "validate-hover": "#1fc16b",
+        "card-6":"#E8DFD9",
+        "card-5":"#F0F4E4",
+        "card-4":"#E7EBF7",
         "card-3": "#979db2",
         "card-2": "#b1bc94",
         "card-1": "#a99182",
