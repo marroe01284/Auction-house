@@ -1,5 +1,5 @@
 import { headers } from "../api/headers.js";
-
+import { API_AUTH_LOGIN,API_AUTH_REGISTER } from "../api/constants.js";
 /**
  * General API request function.
  * @param {string} url - The full endpoint URL.
@@ -53,12 +53,15 @@ export const apiGet = (url) => apiRequest(url, "GET");
  * @returns {Promise<Object>} - The JSON response.
  */
 export async function apiPost(url, body) {
-  const token = localStorage.getItem("accessToken");
+  const requiresAuth = ![API_AUTH_LOGIN, API_AUTH_REGISTER].includes(url);
 
-  if (!token) {
-    console.error("No access token found. Redirecting to login...");
-    window.location.href = "/src/pages/login.html";
-    return;
+  if (requiresAuth) {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token found. Redirecting to login...");
+      window.location.href = "/src/pages/login.html";
+      return;
+    }
   }
 
   return apiRequest(url, "POST", body);
