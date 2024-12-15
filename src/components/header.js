@@ -1,5 +1,5 @@
 export function createNavBar() {
-  const userAvatarUrl = localStorage.getItem("userAvatar") || "default-avatar.png";
+  const userAvatarUrl = localStorage.getItem("userAvatar") || "/assets/images/companyLogo.png";
 
   return `
     <header class="bg-white shadow-sm">
@@ -7,7 +7,7 @@ export function createNavBar() {
       <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <!-- Logo -->
         <div class="flex items-center space-x-2">
-          <h1 class="text-xl text-card-3 font-bold">Auction<span class="font-semibold text-card-1">House</span></h1>
+          <h1 class="text-xl font-bold">Auction<span class="font-semibold text-card-1">House</span></h1>
         </div>
 
         <!-- Hamburger Menu -->
@@ -54,17 +54,17 @@ export function createNavBar() {
         <!-- Links -->
         <a href="/src/pages/auction.html" class="nav-link text-gray-500 hover:text-black" data-index="0">Discover</a>
         <a href="/src/pages/create-listing.html" class="nav-link text-gray-500 hover:text-black" data-index="1">Create Listing</a>
-        <a href="/src/pages/my-auction.html" class="nav-link text-gray-500 hover:text-black" data-index="3">My Auction</a>
+        <a href="/src/pages/user-listing.html" class="nav-link text-gray-500 hover:text-black" data-index="3">My Auction</a>
         <a href="/src/pages/profile.html" class="nav-link text-gray-500 hover:text-black" data-index="3">Profile</a>
-        <a href="/src/pages/login.html" class="nav-link text-gray-500 hover:text-black" data-action="logout">Log out</a>
+        <a href="/index.html" class="nav-link text-gray-500 hover:text-black" data-action="logout">Log out</a>
       </nav>
       <!-- Mobile Dropdown Menu -->
       <div id="mobile-menu" class="hidden bg-white shadow-lg md:hidden">
         <a href="/src/pages/auction.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">Discover</a>
         <a href="/src/pages/create-listing.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">Create Auction</a>
-        <a href="/src/pages/my-auction.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">My Auction</a>
+        <a href="/src/pages/user-listing.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">My Auction</a>
         <a href="/src/pages/profile.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">Profile</a>
-        <a href="/src/pages/login.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">Log out</a>
+        <a href="/index.html" class="block px-6 py-4 text-gray-500 hover:bg-gray-100">Log out</a>
       </div>
     </header>
   `;
@@ -78,11 +78,14 @@ export function createNavBar() {
     const mobileMenu = document.getElementById("mobile-menu");
     const logoutButton = document.querySelector('[data-action="logout"]');
     const currentPage = window.location.pathname;
-    if (currentPage.includes("auction.html")) {
-      searchBarContainer?.classList.remove("hidden");
-    } else {
-      searchBarContainer?.classList.add("hidden");
+    const searchBarContainer = document.getElementById("searchBarContainer");
+
+    if (currentPage.includes("auction.html") && searchBarContainer) {
+      searchBarContainer.classList.remove("hidden");
+    } else if (searchBarContainer) {
+      searchBarContainer.classList.add("hidden");
     }
+    
 
     navLinks.forEach((link) => {
       link.addEventListener("mouseover", () => {

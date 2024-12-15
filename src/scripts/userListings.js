@@ -27,7 +27,7 @@ async function loadMyAuctions() {
     myAuctionsContainer.innerHTML = listings
       .map(
         (listing) => `
-          <div class="auction-card" data-id="${listing.id}">
+          <div class="auction-card bg-card-4 border" data-id="${listing.id}">
             <img src="${listing.media?.[0]?.url || 'default-image.png'}" alt="${listing.title}" class="w-full h-48 object-cover rounded-lg">
             <div class="p-4">
               <h2 class="text-lg font-bold">${listing.title}</h2>

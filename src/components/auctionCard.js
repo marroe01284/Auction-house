@@ -12,7 +12,7 @@
  * @returns {string} - The HTML string for the auction card.
  */
 export function createAuctionCard({ id, title, media, bids, endsAt }) {
-  const imageUrl = media?.[0]?.url || "default-image.png";
+  const imageUrl = media?.[0]?.url || "/assets/images/companyLogo.png";
 
   const highestBidAmount = bids?.length
     ? `$${Math.max(...bids.map((bid) => bid.amount)).toFixed(2)}`
@@ -44,14 +44,14 @@ export function createAuctionCard({ id, title, media, bids, endsAt }) {
  */
 export function calculateTimeLeft(endTime) {
   if (!endTime) {
-    return "Invalid Time"; // Handle cases where endTime is not provided
+    return "Invalid Time";
   }
 
   const now = new Date();
   const endsAt = new Date(endTime);
 
   if (isNaN(endsAt.getTime())) {
-    return "Invalid Time"; // Handle invalid date strings
+    return "Invalid Time";
   }
 
   const difference = endsAt - now;
