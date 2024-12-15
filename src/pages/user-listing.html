@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Listings</title>
+    <link rel="icon" href="/public/assets/images/companyLogo.png">
     <link rel="stylesheet" href="../styles/main.css">
     <script type="module" src="../scripts/userListings.js"></script>
 </head>
@@ -16,7 +17,7 @@
     </div>
   </main>
 
-  <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+  <div id="edit-modal" class=" hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2">
    
       <div class="flex justify-between items-center border-b px-4 py-2">
@@ -31,7 +32,7 @@
           <input
             type="text"
             id="edit-title"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-card-2"
             placeholder="Enter title"
             required
           />
@@ -42,7 +43,7 @@
           <textarea
             id="edit-description"
             rows="4"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-card-2"
             placeholder="Enter description"
           ></textarea>
         </div>
@@ -52,7 +53,7 @@
           <input
             type="url"
             id="edit-url"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-card-2"
             placeholder="Enter image URL"
           />
         </div>
@@ -64,7 +65,7 @@
           </button>
           <button type="submit" class="learn-more green">
             <span class="circle"><span class="icon arrow"></span></span>
-            <span class="button-text">Save Changes</span>
+            <span class="button-text">Save</span>
           </button>
         </div>
       </form>

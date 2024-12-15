@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+.stats-chart-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 40%;
+}
+
+.stats-box {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+  width: 50%;
+}
+
+#avatar-edit-form {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
 button.learn-more {
     --circle-bg: #282936; /* Default circle background color */
     --icon-color: #fff;   /* Default icon color */
@@ -179,35 +211,8 @@ button.learn-more:hover .button-text {
     background: #aaa; /* Darker gray on hover */
   }
   
-  /* Modal Styling */
-  
-  #auction-modal {
-    position: fixed;
-    inset: 0; /* Cover the full viewport */
-    display: none; /* Hidden by default */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    justify-content: center;
-    align-items: center;
-    z-index: 50; /* Layer above other content */
-  }
-  
   #auction-modal.active {
-    display: flex; /* Show the modal */
-  }
-  
-  .modal-content {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    width: 100%;
-    max-width: 600px; /* Max width for larger screens */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    text-align: center;
-  }
-  
-  .modal-content img {
-    width: 100%;
-    border-radius: 8px; /* Match modal's border radius */
+    display: flex;
   }
   
   #auction-modal-close {

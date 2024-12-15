@@ -1,11 +1,11 @@
 module.exports = {
   content: [
-    './index.html',          // Root-level HTML
-    './src/**/*.{html,js}',  // All HTML and JS files in src folder
+    "./index.html",
+    "./src/**/*.{html,js}",
+    "./src/components/**/*.{html,js}",
   ],
   theme: {
     extend: {
-      // Colors
       colors: {
         validate: "#84ebb4",
         "validate-hover": "#1fc16b",
@@ -22,16 +22,14 @@ module.exports = {
         "discard-hover": "#d11322",
         "login-form-color": "#e2e2e2",
         "transparency-cards": "#d9d9d9",
+        "text-color":"#282936"
       },
-      // Font Sizes
       fontSize: {
         base: "0.75rem", // 12px
       },
-      // Font Families
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
       },
-      // Border Radius
       borderRadius: {
         "0": "0rem",
         "1": "0.25rem", // 4px

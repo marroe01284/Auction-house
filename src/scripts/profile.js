@@ -84,6 +84,7 @@ function generateStatsChart(stats) {
 
 document.getElementById("profile-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+
   const newAvatarUrl = document.getElementById("avatar-url").value.trim();
 
   if (!newAvatarUrl) {
@@ -94,7 +95,20 @@ document.getElementById("profile-form").addEventListener("submit", async (event)
   try {
     await updateUserAvatar(newAvatarUrl);
     alert("Avatar updated successfully!");
-    loadUserProfile();
+
+    // Update the avatar image on the profile page
+    const avatarElement = document.getElementById("profile-avatar");
+    avatarElement.src = newAvatarUrl;
+    avatarElement.alt = "User Avatar";
+
+    // Update the avatar in the navbar
+    const navbarAvatar = document.querySelector("header img"); // Navbar avatar selector
+    if (navbarAvatar) {
+      navbarAvatar.src = newAvatarUrl;
+    }
+
+    // Optionally update the avatar URL field
+    document.getElementById("avatar-url").value = newAvatarUrl;
   } catch (error) {
     console.error("Failed to update avatar:", error);
     alert("Failed to update avatar. Please try again.");
