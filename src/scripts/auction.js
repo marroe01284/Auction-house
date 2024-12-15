@@ -1,128 +1,272 @@
-import { fetchAuctions, placeBid } from "../api/auctions.js";
-import { API_BASE } from "../api/constants.js";
+import { fetchAuctions } from "../api/auctions.js";
+import { API_AUCTION_SEARCH } from "../api/constants.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
 import { createFooter } from "../components/footer.js";
-import { createModal } from "../components/modal.js";
-import { createAuctionCard } from "../components/auctionCard.js";
+import { createAuctionCard, calculateTimeLeft } from "../components/auctionCard.js";
+import { loadAuctionDetails } from "../modules/auction.js";
 
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
-document.body.insertAdjacentHTML("beforeend", createFooter());
+document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
-document.body.insertAdjacentHTML("beforeend", createModal("auction-modal", "Auction Details", "<p>Loading...</p>"));
 
-const auctionListings = document.getElementById("auction-listings");
-const modal = document.getElementById("auction-modal");
-const modalContent = modal.querySelector(".p-4");
-const modalClose = document.getElementById("auction-modal-close");
-const modalAction = document.getElementById("auction-modal-action");
 
-// Close modal event listener
-document.getElementById("auction-modal").addEventListener("click", (event) => {
-  if (event.target === event.currentTarget) {
-    document.getElementById("auction-modal").classList.remove("active");
-  }
-});
+const searchInput = document.querySelector("input[type='text']");
+const searchResultsHeading = document.getElementById("search-results-heading");
+const searchResultsSection = document.getElementById("search-results");
+const searchResultsContainer = searchResultsSection.querySelector(".listing-container");
 
-// Close modal when clicking the 'X' button
-document.getElementById("auction-modal-close").addEventListener("click", () => {
-  document.getElementById("auction-modal").classList.remove("active");
-});
+const sections = {
+  "new-listings": document.getElementById("new-listings"),
+  "ending-soon": document.getElementById("ending-soon"),
+  "popular": document.getElementById("popular"),
+  "recently-published": document.getElementById("recently-published"),
+};
 
-// Fetch and display all auctions
-async function loadAuctions() {
+const paginationState = {
+  "new-listings": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "ending-soon": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "popular": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+  "recently-published": { currentPage: 1, totalPages: 0, itemsPerPage: 10 },
+};
+
+ export async function loadAuctions() {
   try {
-    const data = await fetchAuctions({ _bids: true, _seller: true });
+    loader.classList.remove("hidden");
 
-    if (data.data.length === 0) {
-      auctionListings.innerHTML = `<p>No auctions available at the moment.</p>`;
+    const data = await fetchAuctions({ _bids: true, _seller: true });
+    let listings = data.data;
+
+    if (listings.length === 0) {
+      Object.values(sections).forEach((section) => {
+        section.innerHTML = `<p>No auctions available at the moment.</p>`;
+      });
       return;
     }
 
-    renderListings(data.data);
+    const now = new Date();
+    listings = listings.filter((listing) => new Date(listing.endsAt) > now);
+
+    if (listings.length === 0) {
+      Object.values(sections).forEach((section) => {
+        section.innerHTML = `<p>No active auctions available at the moment.</p>`;
+      });
+      return;
+    }
+
+    renderListingsByCategoryWithPagination(listings, "new-listings", sortByCreated);
+    renderListingsByCategoryWithPagination(listings, "ending-soon", sortByEndingSoon);
+    renderListingsByCategoryWithPagination(listings, "popular", sortByPopularity);
+    renderListingsByCategoryWithPagination(listings, "recently-published", sortByRecentlyPublished);
+
+    bindAuctionCards();
+
+    startCountdownTimers();
   } catch (error) {
     console.error("Failed to load auctions:", error);
-    auctionListings.innerHTML = `<p>Failed to load auctions. Please try again later.</p>`;
+    Object.values(sections).forEach((section) => {
+      section.innerHTML = `<p>Failed to load auctions. Please try again later.</p>`;
+    });
+  }finally {
+
+    loader.classList.add("hidden");
   }
 }
 
-// Render listings as cards
-function renderListings(listings) {
-  // Sort listings by `created` in descending order (newest first)
-  const sortedListings = listings.sort((a, b) => new Date(b.created) - new Date(a.created));
+/**
+ * Render listings into a specific section with pagination controls.
+ * @param {Array} listings - Array of auction listings.
+ * @param {string} sectionId - The section to render into.
+ * @param {Function} sortFn - Sorting function for the category.
+ */
+function renderListingsByCategoryWithPagination(listings, sectionId, sortFn) {
+  const section = sections[sectionId];
+  const state = paginationState[sectionId];
+  const sortedListings = [...listings].sort(sortFn);
+  const totalItems = sortedListings.length;
+  const totalPages = Math.ceil(totalItems / state.itemsPerPage);
 
-  auctionListings.innerHTML = sortedListings
-  .map((listing) => createAuctionCard(listing))
-  .join("");
+  const start = (state.currentPage - 1) * state.itemsPerPage;
+  const end = start + state.itemsPerPage;
+  const paginatedListings = sortedListings.slice(start, end);
+
+  section.innerHTML = `
+    <div class="relative flex items-center px-6">
+      <!-- Left Arrow -->
+      <button 
+        class="pagination-arrow prev-arrow absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-4 shadow-lg text-2xl"
+        data-section="${sectionId}">
+        &#8592;
+      </button>
+      
+      <!-- Listings -->
+      <div class="listing-container flex flex-row gap-4 overflow-x-hidden flex-grow px-8 transition-transform duration-500 ease-in-out">
+        ${paginatedListings.map((listing) => createAuctionCard(listing)).join("")}
+      </div>
+      
+      <!-- Right Arrow -->
+      <button 
+        class="pagination-arrow next-arrow absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-4 shadow-lg text-2xl"
+        data-section="${sectionId}">
+        &#8594;
+      </button>
+    </div>
+  `;
+
+  
+  bindAuctionCards();
+
+  attachPaginationArrows(sectionId, listings, sortFn, totalPages);
+}
+
+/**
+ * Attach events to the pagination arrow buttons.
+ * @param {string} sectionId - Section ID.
+ * @param {Array} listings - Listings for the section.
+ * @param {Function} sortFn - Sorting function.
+ * @param {number} totalPages - Total pages.
+ */
+function attachPaginationArrows(sectionId, listings) {
+  const section = sections[sectionId];
+  const prevArrow = section.querySelector(".prev-arrow");
+  const nextArrow = section.querySelector(".next-arrow");
+  const listingContainer = section.querySelector(".listing-container");
+  const cardWidth = listingContainer.querySelector(".auction-card")?.offsetWidth || 200;
+
+  prevArrow?.addEventListener("click", () => {
+    listingContainer.scrollBy({
+      left: -cardWidth * 2,
+      behavior: "smooth",
+    });
+  });
+
+  nextArrow?.addEventListener("click", () => {
+    const maxScrollLeft = listingContainer.scrollWidth - listingContainer.clientWidth;
+
+    if (listingContainer.scrollLeft >= maxScrollLeft - cardWidth) {
+      console.log(`Loading more listings for section: ${sectionId}`);
+      loadMoreListings(sectionId, listings); // Load more dynamically
+    }
+
+    listingContainer.scrollBy({
+      left: cardWidth * 2,
+      behavior: "smooth",
+    });
+  });
+}
+
+
+/**
+ * Slide to the next or previous page with animation.
+ * @param {number} oldPage - Previous page number.
+ * @param {number} newPage - New page number.
+ * @param {HTMLElement} container - The listings container element.
+ * @param {Function} onAnimationEnd - Callback function to execute after animation.
+ */
+function loadMoreListings(sectionId, currentListings) {
+  const section = sections[sectionId];
+  const listingContainer = section.querySelector(".listing-container");
+
+  const newListings = currentListings.splice(0, 5);
+
+  if (newListings.length === 0) {
+    console.log(`No more listings to load for section: ${sectionId}`);
+    return;
+  }
+
+  const newCardsHtml = newListings.map((listing) => createAuctionCard(listing)).join("");
+  listingContainer.insertAdjacentHTML("beforeend", newCardsHtml);
 
   bindAuctionCards();
 }
 
-// Bind auction cards to open the modal
+
+
+const sortByCreated = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
+const sortByEndingSoon = (a, b) => new Date(a.endsAt) - new Date(b.endsAt); // Closest ending first
+const sortByPopularity = (a, b) => (b._count?.bids || 0) - (a._count?.bids || 0); // Most bids first
+const sortByRecentlyPublished = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
+
+
 function bindAuctionCards() {
   const auctionCards = document.querySelectorAll(".auction-card");
 
   auctionCards.forEach((card) => {
     const auctionId = card.getAttribute("data-id");
     card.addEventListener("click", () => loadAuctionDetails(auctionId));
-    console.log("Auction ID:", auctionId);
   });
 }
 
-// Load auction details into the modal
-async function loadAuctionDetails(auctionId) {
-  try {
-    console.log("Auction ID:", auctionId);
-    const url = `${API_BASE}/auction/listings/${auctionId}`;
-    console.log("Fetching Auction Details from:", url);
 
-    modalContent.innerHTML = "<p>Loading...</p>";
-    modal.classList.add("active");
+searchInput.addEventListener("input", async (event) => {
+  const query = event.target.value.trim();
 
-    // Fetch auction details
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    const result = await response.json();
-    const auctionDetails = result.data; // Access the `data` key
-
-    // Populate modal content with auction details
-    modalContent.innerHTML = `
-      <h3 class="text-xl font-semibold mb-2">${auctionDetails.title}</h3>
-      <img src="${auctionDetails.media[0]?.url || 'default-image.png'}" alt="${auctionDetails.title}" class="w-full h-48 object-cover mb-4" />
-      <p>${auctionDetails.description || "No description available."}</p>
-      <p><strong>Current Bids:</strong> ${auctionDetails._count.bids || 0}</p>
-      <input
-        type="number"
-        id="bid-amount"
-        placeholder="Enter your bid"
-        class="w-full border rounded-lg p-2 mt-4"
-      />
-    `;
-
-    // Bind the bid functionality to the modal action button
-    modalAction.onclick = async () => {
-      const bidAmount = Number(document.getElementById("bid-amount").value.trim());
-      if (bidAmount <= 0 || isNaN(bidAmount)) {
-        alert("Please enter a valid bid amount.");
-        return;
-      }
-
-      try {
-        await placeBid(auctionId, bidAmount);
-        alert("Your bid was successfully placed!");
-        modal.classList.remove("active");
-        loadAuctions(); // Reload auctions to reflect updated bids
-      } catch (error) {
-        console.error("Failed to place bid:", error);
-        alert("Failed to place bid. Please try again.");
-      }
-    };
-  } catch (error) {
-    console.error("Failed to load auction details:", error);
-    modalContent.innerHTML = "<p>Failed to load auction details. Please try again later.</p>";
+  if (!query) {
+    searchResultsHeading.classList.add("hidden");
+    searchResultsSection.classList.add("hidden");
+    return;
   }
+
+  try {
+    const url = `${API_AUCTION_SEARCH}${encodeURIComponent(query)}&_bids=true&_seller=true`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const listings = Array.isArray(data.data) ? data.data : [];
+    if (listings.length === 0) {
+      searchResultsHeading.classList.remove("hidden");
+      searchResultsHeading.innerText = `No results found for "${query}"`;
+      searchResultsSection.classList.add("hidden");
+      return;
+    }
+
+
+    searchResultsHeading.classList.remove("hidden");
+    searchResultsHeading.innerText = `Search Results for "${query}"`;
+    searchResultsSection.classList.remove("hidden");
+    searchResultsContainer.innerHTML = listings.map((listing) => createAuctionCard(listing)).join("");
+
+
+    bindSearchResultCards();
+  } catch (error) {
+    console.error("Failed to fetch search results:", error);
+    searchResultsHeading.classList.remove("hidden");
+    searchResultsHeading.innerText = "Failed to fetch search results.";
+    searchResultsSection.classList.add("hidden");
+  }
+});
+
+function bindSearchResultCards() {
+  const searchCards = document.querySelectorAll(".auction-card");
+
+  searchCards.forEach((card) => {
+    const auctionId = card.getAttribute("data-id");
+    card.addEventListener("click", () => loadAuctionDetails(auctionId));
+  });
 }
 
-// Initial load
+
+
+
+function removeExpiredListings() {
+  const listings = document.querySelectorAll(".auction-card");
+  listings.forEach((listing) => {
+    const timer = listing.querySelector(".countdown-timer");
+    if (timer && timer.textContent === "Expired") {
+      listing.remove();
+    }
+  });
+}
+
+function startCountdownTimers() {
+  setInterval(() => {
+    const timers = document.querySelectorAll(".countdown-timer");
+    timers.forEach((timer) => {
+      const endsAt = timer.getAttribute("data-ends-at");
+      timer.textContent = calculateTimeLeft(endsAt);
+    });
+
+    removeExpiredListings();
+  }, 60000);
+}
+
 loadAuctions();

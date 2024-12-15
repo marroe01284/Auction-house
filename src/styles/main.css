@@ -1,3 +1,270 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.stats-chart-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 40%;
+}
+
+.stats-box {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+  width: 50%;
+}
+
+#avatar-edit-form {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
+button.learn-more {
+    --circle-bg: #282936; /* Default circle background color */
+    --icon-color: #fff;   /* Default icon color */
+    --text-color: #282936; /* Default text color */
+    --hover-bg: #fff;     /* Default hover background color */
+    --hover-text-color: #fff; /* Default hover text color */
+    --hover-transform: translate(1rem, 0); /* Hover effect for arrow */
+
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    width: 12rem;
+    height: auto;
+    margin-top: 2rem;
+}
+
+button.learn-more .circle {
+    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+    position: relative;
+    display: block;
+    margin: 0;
+    width: 3rem;
+    height: 3rem;
+    background: var(--circle-bg);
+    border-radius: 1.625rem;
+}
+
+button.learn-more .circle .icon {
+    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background: var(--icon-color);
+}
+
+button.learn-more .circle .icon.arrow {
+    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+    left: 0.625rem;
+    width: 1.125rem;
+    height: 0.125rem;
+    background: none;
+}
+
+button.learn-more .circle .icon.arrow::before {
+    position: absolute;
+    content: "";
+    top: -0.25rem;
+    right: 0.0625rem;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-top: 0.125rem solid var(--icon-color);
+    border-right: 0.125rem solid var(--icon-color);
+    transform: rotate(45deg);
+}
+
+button.learn-more .button-text {
+    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.75rem 0;
+    margin: 0 0 0 1.85rem;
+    color: var(--text-color);
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+button.learn-more:hover .circle {
+    width: 100%;
+}
+
+button.learn-more:hover .circle .icon.arrow {
+    background: var(--hover-bg);
+    transform: var(--hover-transform);
+}
+
+button.learn-more:hover .button-text {
+    color: var(--hover-text-color);
+}
+
+/* Green Button */
+.learn-more.green {
+    --circle-bg: #84ebb4; /* Green background */
+    --hover-bg: #1fc16b;  /* Green hover background */
+    --text-color: #282936;
+    --hover-text-color: #fff;
+}
+
+/* Red Button */
+.learn-more.red {
+    --circle-bg: #f05a66; /* Red background */
+    --hover-bg: #d11322;  /* Red hover background */
+    --text-color: #282936; /* Text color on red buttons */
+    --hover-text-color: #fff;
+}
+/* Auction Card Styling */
+.auction-card {
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 300px;
+  }
+  
+  .auction-card:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow */
+  }
+  
+  .auction-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6); /* Transparent background */
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .card-bid {
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  /* Horizontal Scrolling Containers */
+  .listing-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap scrolling for better UX */
+    gap: 2rem; /* Space between cards */
+    padding: 1rem 0; /* Add vertical padding */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+  }
+  
+  .listing-container::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
+  }
+  
+  .listing-container::-webkit-scrollbar-thumb {
+    background: #ccc; /* Light gray scrollbar */
+    border-radius: 4px; /* Rounded scrollbar thumb */
+  }
+  
+  .listing-container::-webkit-scrollbar-thumb:hover {
+    background: #aaa; /* Darker gray on hover */
+  }
+  
+  #auction-modal.active {
+    display: flex;
+  }
+  
+  #auction-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  #auction-modal-close:hover {
+    color: #000; /* Change color on hover */
+  }
+
+  .countdown-timer {
+    font-family: Roboto, sans-serif;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .pagination-arrow {
+    z-index: 10; /* Ensure arrows are above listings */
+    opacity: 0.8; /* Slight transparency for better visuals */
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  .pagination-arrow:hover {
+    opacity: 1; /* Full opacity on hover */
+  }
+  
+  .prev-arrow {
+    left: 1.5rem; /* Adjust the distance from the left edge */
+  }
+  
+  .next-arrow {
+    right: 1.5rem; /* Adjust the distance from the right edge */
+  }
+  
+  .loader {
+    border-top-color: #1fc16b; /* Spinner color */
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

@@ -1,5 +1,5 @@
-import { apiGet, apiPost } from "../modules/utils.js";
-import { API_AUCTIONS } from "./constants.js";
+import { apiGet, apiPost, apiPut, apiDelete } from "../modules/utils.js";
+import { API_AUCTIONS, API_BASE } from "./constants.js";
 
 /**
  * Fetch all auction listings.
@@ -63,4 +63,14 @@ export async function createListing(listingData) {
       console.error("Failed to create listing:", error);
       throw error;
     }
+  }
+
+  export async function updateAuction(auctionId, updatedData) {
+    const response = await apiPut(`${API_BASE}/auction/listings/${auctionId}`, updatedData);
+    return response;
+  }
+
+  export async function deleteAuction(auctionId) {
+    const response = await apiDelete(`${API_BASE}/auction/listings/${auctionId}`);
+    return response;
   }

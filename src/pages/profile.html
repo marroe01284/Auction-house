@@ -4,133 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
+  <link rel="icon" href="/public/assets/images/companyLogo.png">
   <link rel="stylesheet" href="../styles/main.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Styling the layout */
-    /* .profile-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    } */
 
-    #profile-avatar {
-      display: flex;
-      justify-content: center;
-    }
-
-    .profile-info {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .edit-avatar-text {
-      margin-top: 10px;
-      color: #007bff;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .stats-chart-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 40px;
-      gap: 20px;
-    }
-
-    .stats-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 40%;
-    }
-
-    .stats-box {
-      background-color: #f9f9f9;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .chart-container {
-      width: 50%;
-    }
-
-    #avatar-edit-form {
-      display: none;
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
 </head>
-<body>
-  <h2 class="text-2xl font-bold mb-6 mt-6 text-center">Profile Information</h2>
-  <div class="flex items-center justify-center">
-    <img 
-    id="profile-avatar" 
-    src="default-avatar.png" 
-    alt="User Avatar" 
-    class="mb-6 w-24 h-24 rounded-full border border-gray-300"
-    />
-  </div>
-    <div class="profile-container max-w-4xl mx-auto mt-10 bg-white p-6 rounded-lg">
-    <!-- Form Section -->
-    <form id="profile-form" class="space-y-4">
-      <!-- Name -->
-      <div class="flex items-center justify-between border-b pb-2">
-        <label for="name" class="text-gray-600 font-medium w-1/3">Name</label>
-        <p id="profile-name" class="text-gray-800 w-2/3">Loading...</p>
-      </div>
-  
-      <!-- Username -->
-      <div class="flex items-center justify-between border-b pb-2">
-        <label for="username" class="text-gray-600 font-medium w-1/3">Username</label>
-        <p id="profile-username" class="text-gray-800 w-2/3">Loading...</p>
-      </div>
-  
-      <!-- Avatar URL -->
-      <div class="flex items-center justify-between">
-        <label for="avatar-url" class="text-gray-600 font-medium w-1/3">Avatar URL</label>
-        <div class="flex items-center space-x-4 w-2/3">
-          <input 
-            type="url" 
-            id="avatar-url" 
-            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-            placeholder="Enter new avatar URL"
-          />
-          <button 
-            type="submit" 
-            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-            Edit
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <h1 class="text-center p-12 font-bold text-4xl ">Statistics</h1>
-  <div class="stats-chart-container">
-    <div class="stats-container">
-      <div class="stats-box">
-        <h3>Bids Won</h3>
-        <p id="user-wins">0</p>
-      </div>
-      <div class="stats-box">
-        <h3>Total Listings</h3>
-        <p id="user-bids">0</p>
-      </div>
-      <div class="stats-box">
-        <h3>Credits</h3>
-        <p id="user-credits">0</p>
-      </div>
-    </div>
-    <div class="chart-container">
-      <canvas id="stats-chart"></canvas>
-    </div>
-  </div>
+<body class="bg-white">
+  <h2 class="text-4xl font-bold mb-6 mt-11 text-center">My Profile</h2>
+  <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-8 max-w-6xl mx-auto px-4 mb-11 mt-11">
 
+    <div class="flex flex-col items-center space-y-4">
+      <img 
+        id="profile-avatar" 
+        src="default-avatar.png" 
+        alt="User Avatar" 
+        class="w-32 h-32 rounded-full border border-black shadow"
+      />
+    </div>
+  
+
+    <div class="profile-container w-full lg:w-2/3">
+      <form id="profile-form" class="space-y-6">
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-black pb-4">
+          <label for="name" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Name</label>
+          <p id="profile-name" class="text-gray-800 w-full sm:w-2/3">Loading...</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-black pb-4">
+          <label for="username" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Username</label>
+          <p id="profile-username" class="text-gray-800 w-full sm:w-2/3">Loading...</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <label for="avatar-url" class="text-gray-600 font-medium w-full sm:w-1/3 mb-2 sm:mb-0">Avatar URL</label>
+          <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-2/3">
+            <input 
+              type="url" 
+              id="avatar-url" 
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              placeholder="Enter new avatar URL"
+            />
+            <button type="submit" class="learn-more green">
+              <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+              </span>
+              <span class="button-text">Update</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="border-t border-gray-300 my-4"></div>
+  <h2 class="text-center p-12 font-bold text-4xl">Statistics</h2>
+  
+  <div class="stats-chart-container flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between gap-12 max-w-4xl mx-auto px-4">
+
+    <div class="stats-container grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 w-full lg:w-1/2">
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Bids Won</h3>
+        <p id="user-wins" class="text-2xl font-semibold text-gray-800">0</p>
+      </div>
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Total Listings</h3>
+        <p id="user-bids" class="text-2xl font-semibold text-gray-800">0</p>
+      </div>
+      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+        <h3 class="text-lg font-bold text-gray-600">Credits</h3>
+        <p id="user-credits" class="text-2xl font-semibold text-gray-800">0</p>
+      </div>
+    </div>
+  
+
+    <div class="chart-container w-full lg:w-1/2">
+      <canvas id="stats-chart" class="w-full"></canvas>
+    </div>
+  </div>
+  <footer>
+
+  </footer>
   <script type="module" src="../scripts/profile.js"></script>
 </body>
 </html>

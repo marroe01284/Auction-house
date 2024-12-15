@@ -4,21 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In</title>
+  <link rel="icon" href="/public/assets/images/companyLogo.png">
   <link rel="stylesheet" href="../styles/main.css">
 </head>
-<body>
-  <h1>Login</h1>
-  <form id="login-form">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required />
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required />
-    
-    <button type="submit">Login</button>
+<body class="bg-white flex items-center justify-center flex-col h-screen font-roboto">
+  <img src="/public/assets/images/companyLogo.png" alt="Company logo">
+  <div class="bg-white p-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">LOGIN</h1>
+    <form id="login-form" class="space-y-4">
+     
+      <div>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Example@stud.noroff.no"
+          class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto" 
+          required 
+        />
+      </div>
+     
+      <div>
+        <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        placeholder="Password"
+        class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:font-roboto placeholder:text-lg" 
+        required 
+        />
+      </div>
+      
+      <div class="text-center">
+        <button type="submit" class="learn-more green">
+          <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+          </span>
+          <span class="button-text">Login</span>
+        </button>
+      </div>
+  </div>
+    <div id="error-message" style="font-weight: bold; color: red; display: none;"></div>
+  </div>
   </form>
-  <p>Don’t have an account? <a href="register.html">Register here</a></p>
-  <div id="error-message" style="color: red; display: none;">Login failed! Please try again.</div>
+  <p class="text-center text-sm text-gray-600 mt-4">
+    Don't have an account? 
+    <a href="register.html" class="text-blue-500 hover:underline">Register here</a>
+  </p>
+
   <script type="module" src="../scripts/login.js"></script>
 </body>
 </html>

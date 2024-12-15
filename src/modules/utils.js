@@ -1,5 +1,5 @@
 import { headers } from "../api/headers.js";
-
+import { API_AUTH_LOGIN,API_AUTH_REGISTER } from "../api/constants.js";
 /**
  * General API request function.
  * @param {string} url - The full endpoint URL.
@@ -10,29 +10,32 @@ import { headers } from "../api/headers.js";
 export async function apiRequest(url, method = "GET", body = null) {
   const options = {
     method,
-    headers: headers(), // Dynamic headers
+    headers: headers(),
   };
 
   if (body) {
-    options.body = JSON.stringify(body); // Add body for POST/PUT
+    options.body = JSON.stringify(body);
   }
 
   try {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorDetails = await response.json().catch(() => ({})); // Handle empty/error JSON responses
+      const errorDetails = await response.json().catch(() => ({}));
       throw new Error(`Error ${response.status}: ${errorDetails.message || response.statusText}`);
     }
 
-    return await response.json(); // Parse JSON response
+    if (method === "DELETE" || response.status === 204) {
+      return;
+    }
+
+    return await response.json();
   } catch (error) {
     console.error(`API request to ${url} failed:`, error);
     throw error;
   }
 }
 
-// Helper functions for specific HTTP methods
 
 /**
  * GET request
@@ -50,12 +53,15 @@ export const apiGet = (url) => apiRequest(url, "GET");
  * @returns {Promise<Object>} - The JSON response.
  */
 export async function apiPost(url, body) {
-  const token = localStorage.getItem("accessToken");
+  const requiresAuth = ![API_AUTH_LOGIN, API_AUTH_REGISTER].includes(url);
 
-  if (!token) {
-    console.error("No access token found. Redirecting to login...");
-    window.location.href = "/src/pages/login.html";
-    return;
+  if (requiresAuth) {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token found. Redirecting to login...");
+      window.location.href = "/src/pages/login.html";
+      return;
+    }
   }
 
   return apiRequest(url, "POST", body);
