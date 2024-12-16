@@ -25,9 +25,6 @@
   }
 }
 
-
-
-
 #avatar-edit-form {
   display: none;
   text-align: center;
@@ -196,19 +193,6 @@ button.learn-more:hover .button-text {
     display: flex;
   }
   
-  #auction-modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  #auction-modal-close:hover {
-    color: #000;
-  }
 
   .countdown-timer {
     font-family: Roboto, sans-serif;
