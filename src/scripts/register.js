@@ -25,8 +25,10 @@ registerForm.addEventListener("submit", async (event) => {
     const response = await apiRegister({ name, email, password, avatar: { url: avatarUrl } });
     console.log("Registration successful:", response);
 
-    localStorage.setItem("accessToken", response.data.accessToken);
-    window.location.href = "login.html";
+    setTimeout(() => {
+      localStorage.setItem("accessToken", response.data.accessToken);
+      window.location.href = "login.html";
+    }, 450); 
   } catch (error) {
     console.error("Registration failed:", error);
 
@@ -37,12 +39,23 @@ registerForm.addEventListener("submit", async (event) => {
     }
   }
 });
-
+/**
+ * Validates the provided email address.
+ * Ensures it matches the required pattern for @stud.noroff.no domain.
+ * 
+ * @param {string} email - The email address to validate.
+ * @returns {boolean} - True if the email is valid, otherwise false.
+ */
 function validateEmail(email) {
   const pattern = /^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/;
   return pattern.test(email);
 }
-
+/**
+ * Validates a URL to make sure it is properly formatted.
+ * 
+ * @param {string} url - The URL to validate.
+ * @returns {boolean} - True if the URL is valid, otherwise false.
+ */
 function validateUrl(url) {
   try {
     new URL(url);

@@ -81,7 +81,9 @@ async function openEditModal(auctionId) {
 
     document.getElementById("edit-form").onsubmit = async (event) => {
       event.preventDefault();
-      await handleEditAuction(auctionId);
+      setTimeout(async () => {
+        await handleEditAuction(auctionId); // Save auction after delay
+      }, 450); // Delay to allow button animation
     };
   } catch (error) {
     console.error("Failed to load listing details:", error);
@@ -114,32 +116,44 @@ async function handleEditAuction(auctionId) {
 async function handleDeleteAuction(auctionId) {
   if (!confirm("Are you sure you want to delete this listing?")) return;
 
-  try {
-    await deleteAuction(auctionId);
-    alert("Listing deleted successfully!");
-    loadMyAuctions();
-  } catch (error) {
-    console.error("Failed to delete listing:", error);
-    alert("Failed to delete listing. Please try again.");
-  }
+  setTimeout(async () => {
+    try {
+      await deleteAuction(auctionId);
+      alert("Listing deleted successfully!");
+      loadMyAuctions();
+    } catch (error) {
+      console.error("Failed to delete listing:", error);
+      alert("Failed to delete listing. Please try again.");
+    }
+  }, 450); 
 }
 
 function closeModal() {
-  document.getElementById("edit-modal").classList.add("hidden");
+  setTimeout(() => {
+    document.getElementById("edit-modal").classList.add("hidden");
+  }, 450);
 }
 
 function bindAuctionActions() {
   const updateButtons = document.querySelectorAll(".update-btn");
   updateButtons.forEach((button) => {
-    button.addEventListener("click", () => openEditModal(button.dataset.id));
+    button.addEventListener("click", () => {
+      setTimeout(() => {
+        openEditModal(button.dataset.id);
+      }, 450); 
+    });
   });
 
   const deleteButtons = document.querySelectorAll(".delete-btn");
   deleteButtons.forEach((button) => {
-    button.addEventListener("click", () => handleDeleteAuction(button.dataset.id));
+    button.addEventListener("click", () => {
+      setTimeout(() => {
+        handleDeleteAuction(button.dataset.id); 
+      }, 450);
+    });
   });
 
-  // Bind modal close buttons
+ 
   document.getElementById("edit-modal-close").addEventListener("click", closeModal);
   document.getElementById("edit-cancel").addEventListener("click", closeModal);
   window.addEventListener("click", (e) => {

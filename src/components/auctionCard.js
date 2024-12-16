@@ -40,7 +40,7 @@ export function createAuctionCard({ id, title, media, bids, endsAt }) {
 /**
  * Calculates the time left until an auction ends.
  * @param {Date} endDate - The end date of the auction.
- * @returns {string} - A formatted string representing the time left.
+ * @returns {string} - A string showing the time left.
  */
 export function calculateTimeLeft(endTime) {
   if (!endTime) {

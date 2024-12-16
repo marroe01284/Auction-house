@@ -73,7 +73,7 @@ const paginationState = {
 }
 
 /**
- * Render listings into a specific section with pagination controls.
+ * Render listings into sections with pagination controls.
  * @param {Array} listings - Array of auction listings.
  * @param {string} sectionId - The section to render into.
  * @param {Function} sortFn - Sorting function for the category.
@@ -119,7 +119,7 @@ function renderListingsByCategoryWithPagination(listings, sectionId, sortFn) {
 }
 
 /**
- * Attach events to the pagination arrow buttons.
+ * Attach events to the pagination arrows.
  * @param {string} sectionId - Section ID.
  * @param {Array} listings - Listings for the section.
  * @param {Function} sortFn - Sorting function.
@@ -186,7 +186,9 @@ const sortByEndingSoon = (a, b) => new Date(a.endsAt) - new Date(b.endsAt); // C
 const sortByPopularity = (a, b) => (b._count?.bids || 0) - (a._count?.bids || 0); // Most bids first
 const sortByRecentlyPublished = (a, b) => new Date(a.created) - new Date(b.created); // Newest first
 
-
+/**
+ * Binds click events to auction cards for opening the details.
+ */
 function bindAuctionCards() {
   const auctionCards = document.querySelectorAll(".auction-card");
 
@@ -195,7 +197,6 @@ function bindAuctionCards() {
     card.addEventListener("click", () => loadAuctionDetails(auctionId));
   });
 }
-
 
 searchInput.addEventListener("input", async (event) => {
   const query = event.target.value.trim();
@@ -246,7 +247,9 @@ function bindSearchResultCards() {
 
 
 
-
+/**
+ * Removes listings with expired timers.
+ */
 function removeExpiredListings() {
   const listings = document.querySelectorAll(".auction-card");
   listings.forEach((listing) => {
@@ -256,7 +259,9 @@ function removeExpiredListings() {
     }
   });
 }
-
+/**
+ * Starts countdown timer for listings and removes expired listings.
+ */
 function startCountdownTimers() {
   setInterval(() => {
     const timers = document.querySelectorAll(".countdown-timer");

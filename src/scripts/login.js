@@ -32,7 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Access Token Stored:", localStorage.getItem("accessToken"));
       console.log("User Name Stored:", localStorage.getItem("userName"));
 
-      window.location.href = "/src/pages/auction.html";
+      setTimeout(() => {
+        window.location.href = "/src/pages/auction.html";
+      }, 450);
     } catch (error) {
       console.error("Login failed:", error);
 

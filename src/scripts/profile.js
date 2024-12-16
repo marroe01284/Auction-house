@@ -2,6 +2,7 @@ import { fetchUserProfile, updateUserAvatar } from "../api/profiles.js";
 import { createNavBar, initializeNavBar } from "../components/header.js";
 import { createFooter } from "../components/footer.js";
 import { checkIfLoggedIn } from "../modules/auth.js";
+
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
 document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
@@ -10,14 +11,13 @@ checkIfLoggedIn();
 async function loadUserProfile() {
   try {
     const profile = await fetchUserProfile();
-    console.log("User Profile Loaded:", profile);
 
     const avatarElement = document.getElementById("profile-avatar");
     avatarElement.src = profile.data.avatar?.url || "default-avatar.png";
     avatarElement.alt = profile.data.avatar?.alt || "User Avatar";
 
     document.getElementById("profile-name").innerText = profile.data.name;
-    document.getElementById("profile-username").innerText = profile.data.name; // Assuming username is the same as `name`
+    document.getElementById("profile-username").innerText = profile.data.name;
     document.getElementById("avatar-url").value = profile.data.avatar?.url || "";
 
     const stats = {
@@ -63,6 +63,11 @@ function generateStatsChart(stats) {
       plugins: {
         legend: {
           position: "bottom",
+          labels: {
+            font: {
+              size: window.innerWidth < 640 ? 12 : 14,
+            },
+          },
         },
         tooltip: {
           callbacks: {
@@ -75,13 +80,18 @@ function generateStatsChart(stats) {
         },
       },
       layout: {
-        padding: 20,
+        padding: window.innerWidth < 640 ? 10 : 20,
       },
     },
   });
 }
 
-
+/**
+ * Event handler for updating the user avatar.
+ * Fetches the new avatar URL, validates it, and updates it in the UI and API.
+ * 
+ * @param {Event} event - The submit event triggered by the form.
+ */
 document.getElementById("profile-form").addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -94,21 +104,21 @@ document.getElementById("profile-form").addEventListener("submit", async (event)
 
   try {
     await updateUserAvatar(newAvatarUrl);
-    alert("Avatar updated successfully!");
+    setTimeout(() => {
+      alert("Avatar updated successfully!");
 
-    // Update the avatar image on the profile page
-    const avatarElement = document.getElementById("profile-avatar");
-    avatarElement.src = newAvatarUrl;
-    avatarElement.alt = "User Avatar";
+      
+      const avatarElement = document.getElementById("profile-avatar");
+      avatarElement.src = newAvatarUrl;
+      avatarElement.alt = "User Avatar";
 
-    // Update the avatar in the navbar
-    const navbarAvatar = document.querySelector("header img"); // Navbar avatar selector
-    if (navbarAvatar) {
-      navbarAvatar.src = newAvatarUrl;
-    }
+      const navbarAvatar = document.querySelector("header img");
+      if (navbarAvatar) {
+        navbarAvatar.src = newAvatarUrl;
+      }
 
-    // Optionally update the avatar URL field
-    document.getElementById("avatar-url").value = newAvatarUrl;
+      document.getElementById("avatar-url").value = newAvatarUrl;
+    }, 450);
   } catch (error) {
     console.error("Failed to update avatar:", error);
     alert("Failed to update avatar. Please try again.");

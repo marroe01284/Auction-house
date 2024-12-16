@@ -1,88 +1,64 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="icon" href="/public/assets/images/companyLogo.png">
-    <link rel="stylesheet" href="../styles/main.css">
-    <script type="module" src="../scripts/register.js"></script>
-</head>
-<body class="bg-white flex justify-center flex-col h-screen">
- 
-<div class="flex items-center flex-col justify-center mt-20">
-  <img src="/public/assets/images/companyLogo.png" alt="">
-</div>
-<div class="flex items-center flex-col justify-center">
 
-  <div class="bg-white p-8 w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">REGISTER</h1>
-    <form id="register-form" class="space-y-4">
-      <div>
-        <input 
-        type="text" 
-        id="name" 
-        name="name" 
-        placeholder="Name"
-        pattern="^[a-zA-Z0-9_]+$" 
-        title="Only letters, numbers, and underscores are allowed" 
-        required
-        class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto"
-        />
-      </div>
-      
-      <div>
-        <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        placeholder="Example@stud.noroff.no"
-        pattern="^[a-zA-Z0-9._%+\-]+@stud\.noroff\.no$" 
-        title="Must be a valid stud.noroff.no email address" 
-        required
-        class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto"
-        />
-      </div>
-      
-      <div>
-        <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        placeholder="Password"
-        minlength="8" 
-        title="Password must be at least 8 characters" 
-        required
-        class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto"
-        />
-      </div>
-      
-      <div>
-        <input 
-        type="url" 
-        id="avatar-url" 
-        name="avatar-url" 
-        placeholder="Avatar URL"
-        class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto"
-        />
-      </div>
-      
-      <div class="text-center">
-        <button type="submit" class="learn-more green">
-          <span class="circle" aria-hidden="true">
-            <span class="icon arrow"></span>
-          </span>
-          <span class="button-text">Register</span>
-        </button>
-      </div>
-    </form>
-    <p class="text-center text-sm text-gray-600 mt-4">
-      Already have an account? 
-      <a href="login.html" class="text-blue-500 hover:underline">Login</a>
-    </p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="icon" href="/public/assets/images/companyLogo.png">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body class="bg-white flex justify-center flex-col h-screen">
+
+  <div class="flex items-center flex-col justify-center mt-20">
+    <img src="/public/assets/images/companyLogo.png" alt="">
   </div>
-  <div id="error-message" style="color: red; display: none;">Registration failed. Please try again.</div>
-</div>
-  
+  <div class="flex items-center flex-col justify-center">
+
+    <div class="bg-white p-8 w-full max-w-md">
+      <h1 class="text-2xl font-bold mb-6 text-center">REGISTER</h1>
+      <form id="register-form" class="space-y-4">
+        <div>
+          <input type="text" id="name" name="name" placeholder="Name" pattern="^[a-zA-Z0-9_]+$"
+            title="Only letters, numbers, and underscores are allowed" required
+            class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-card-2 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto" />
+        </div>
+
+        <div>
+          <input type="email" id="email" name="email" placeholder="Example@stud.noroff.no"
+            pattern="^[a-zA-Z0-9._%+\-]+@stud\.noroff\.no$" title="Must be a valid stud.noroff.no email address"
+            required
+            class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-card-2 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto" />
+        </div>
+
+        <div>
+          <input type="password" id="password" name="password" placeholder="Password" minlength="8"
+            title="Password must be at least 8 characters" required
+            class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-card-2 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto" />
+        </div>
+
+        <div>
+          <input type="url" id="avatar-url" name="avatar-url" placeholder="Avatar URL"
+            class="bg-login-form-color w-full px-4 py-4 mb-4 border rounded-1 border-white focus:ring-2 focus:ring-card-2 focus:outline-none placeholder-gray-400 placeholder:text-lg placeholder:font-roboto" />
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="learn-more green">
+            <span class="circle" aria-hidden="true">
+              <span class="icon arrow"></span>
+            </span>
+            <span class="button-text">Register</span>
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-sm text-gray-600 mt-4">
+        Already have an account?
+        <a href="login.html" class="text-blue-500 hover:underline">Login</a>
+      </p>
+    </div>
+    <div id="error-message" style="color: red; display: none;">Registration failed. Please try again.</div>
+  </div>
   <script type="module" src="../scripts/register.js"></script>
 </body>
+
 </html>

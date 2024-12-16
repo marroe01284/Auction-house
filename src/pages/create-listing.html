@@ -1,70 +1,69 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Listing</title>
-    <link rel="icon" href="/public/assets/images/companyLogo.png">
-    <link rel="stylesheet" href="../styles/main.css">
-    <script type="module" src="../scripts/createListing.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Listing</title>
+  <link rel="icon" href="/public/assets/images/companyLogo.png">
+  <link rel="stylesheet" href="../styles/main.css">
 </head>
+
 <body class="bg-white font-roboto">
-  
+
   <h1 class="text-center text-4xl font-bold text-gray-800 mt-10">Create a New Listing</h1>
-  
   <main class="max-w-3xl mx-auto rounded-2 bg-white border border-grey p-6 mt-10 ">
     <form id="create-listing-form" class="space-y-6">
-     
+
       <div>
-        <label for="title" class="block text-lg font-medium text-gray-700">Title <span class="text-red-500">(required)</span>:</label>
-        <input type="text" id="title" name="title" required 
-               class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
-               placeholder="Enter a title for your listing">
+        <label for="title" class="block text-lg font-medium text-gray-700">Title <span
+            class="text-red-500">(required)</span>:</label>
+        <input type="text" id="title" name="title" required
+          class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-card-2 focus:border-card-2"
+          placeholder="Enter a title for your listing">
       </div>
-      
-      
+
       <div>
         <label for="description" class="block text-lg font-medium text-gray-700">Description:</label>
-        <textarea id="description" name="description" rows="4" 
-                  class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
-                  placeholder="Write a detailed description (optional)"></textarea>
+        <textarea id="description" name="description" rows="4"
+          class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-card-2 focus:border-card-2"
+          placeholder="Write a detailed description (optional)"></textarea>
       </div>
-      
-     
+
       <div>
         <label for="tags" class="block text-lg font-medium text-gray-700">Tags:</label>
-        <input type="text" id="tags" name="tags" 
-               class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
-               placeholder="Enter tags separated by commas (e.g., electronics, gadgets)">
+        <input type="text" id="tags" name="tags"
+          class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-card-2 focus:border-card-2"
+          placeholder="Enter tags separated by commas (e.g., electronics, gadgets)">
       </div>
-      
-    
+
       <div>
         <label for="media" class="block text-lg font-medium text-gray-700">Media URLs:</label>
-        <input type="text" id="media" name="media" 
-               class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
-               placeholder="Enter image URLs separated by commas">
+        <input type="text" id="media" name="media"
+          class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-card-2 focus:border-card-2"
+          placeholder="Enter image URLs separated by commas">
       </div>
-      
-     
+
       <div>
-        <label for="endsAt" class="block text-lg font-medium text-gray-700">End Date <span class="text-red-500">(required)</span>:</label>
-        <input type="datetime-local" id="endsAt" name="endsAt" required 
-               class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        <label for="endsAt" class="block text-lg font-medium text-gray-700">End Date <span
+            class="text-red-500">(required)</span>:</label>
+        <input type="datetime-local" id="endsAt" name="endsAt" required
+          class="mt-1 block w-full p-3 border rounded-md shadow-sm focus:ring-card-2 focus:border-card-2">
       </div>
-      
-    
+
       <div class="text-center">
-        <button type="submit" class="learn-more green">
+        <button type="submit" class="hidden md:inline-flex learn-more green relative items-center justify-center">
           <span class="circle" aria-hidden="true">
             <span class="icon arrow"></span>
           </span>
           <span class="button-text">Create</span>
         </button>
+
       </div>
-      
-     
+
       <p id="message" class="text-center text-lg font-medium mt-4 hidden"></p>
     </form>
   </main>
+  <script type="module" src="../scripts/createListing.js"></script>
 </body>
+
 </html>
