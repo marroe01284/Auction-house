@@ -1,3 +1,10 @@
+/**
+ * Creates a modal HTML structure.
+ * @param {string} id - The ID for the modal element.
+ * @param {string} title - The title to show in the modal header.
+ * @param {string} content - The HTML content for the modal body.
+ * @returns {string} - The HTML string for the modal.
+ */
 export function createModal(id, title, content) {
   return `
     <div id="${id}" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

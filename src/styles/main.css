@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* profile CSS */
 .stats-chart-container {
   display: flex;
   justify-content: center;
@@ -9,24 +11,22 @@
   gap: 20px;
 }
 
-.stats-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 40%;
-}
-
-.stats-box {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .chart-container {
-  width: 50%;
+  width: 100%; 
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
 }
+
+@media (max-width: 640px) {
+  .chart-container {
+    max-width: 300px;
+    padding: 10px;
+  }
+}
+
+
+
 
 #avatar-edit-form {
   display: none;
@@ -34,13 +34,15 @@
   margin-top: 20px;
 }
 
+/* BTN CSS */
+
 button.learn-more {
     --circle-bg: #282936; /* Default circle background color */
-    --icon-color: #fff;   /* Default icon color */
-    --text-color: #282936; /* Default text color */
-    --hover-bg: #fff;     /* Default hover background color */
-    --hover-text-color: #fff; /* Default hover text color */
-    --hover-transform: translate(1rem, 0); /* Hover effect for arrow */
+    --icon-color: #fff;   
+    --text-color: #282936; 
+    --hover-bg: #fff;     
+    --hover-text-color: #fff; 
+    --hover-transform: translate(1rem, 0); 
 
     position: relative;
     display: inline-block;
@@ -125,7 +127,7 @@ button.learn-more:hover .circle .icon.arrow {
 
 button.learn-more:hover .button-text {
     color: var(--hover-text-color);
-}
+}  
 
 /* Green Button */
 .learn-more.green {
@@ -142,7 +144,7 @@ button.learn-more:hover .button-text {
     --text-color: #282936; /* Text color on red buttons */
     --hover-text-color: #fff;
 }
-/* Auction Card Styling */
+/* Auction Card */
 .auction-card {
     border-radius: 4px;
     overflow: hidden;
@@ -166,51 +168,30 @@ button.learn-more:hover .button-text {
     display: block;
   }
   
-  .card-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.6); /* Transparent background */
-    color: white;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .card-title {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  .card-bid {
-    font-size: 0.9rem;
-    margin-top: 5px;
-  }
-  
-  /* Horizontal Scrolling Containers */
+  /* Scrolling*/
   .listing-container {
     display: flex;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Snap scrolling for better UX */
-    gap: 2rem; /* Space between cards */
-    padding: 1rem 0; /* Add vertical padding */
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
-  scrollbar-width: none; /* For Firefox */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 2rem; 
+    padding: 1rem 0;
+    -ms-overflow-style: none;
+  scrollbar-width: none;
   }
   
   .listing-container::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Edge */
+    display: none;
   }
   
   .listing-container::-webkit-scrollbar-thumb {
-    background: #ccc; /* Light gray scrollbar */
-    border-radius: 4px; /* Rounded scrollbar thumb */
+    background: #ccc;
+    border-radius: 4px;
   }
   
   .listing-container::-webkit-scrollbar-thumb:hover {
     background: #aaa; /* Darker gray on hover */
   }
-  
+  /* Modal */
   #auction-modal.active {
     display: flex;
   }
@@ -226,7 +207,7 @@ button.learn-more:hover .button-text {
   }
   
   #auction-modal-close:hover {
-    color: #000; /* Change color on hover */
+    color: #000;
   }
 
   .countdown-timer {
@@ -237,25 +218,27 @@ button.learn-more:hover .button-text {
     text-align: center;
   }
   .pagination-arrow {
-    z-index: 10; /* Ensure arrows are above listings */
-    opacity: 0.8; /* Slight transparency for better visuals */
+    z-index: 10;
+    opacity: 0.8;
     transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
   }
   
   .pagination-arrow:hover {
-    opacity: 1; /* Full opacity on hover */
+    opacity: 1;
   }
   
   .prev-arrow {
-    left: 1.5rem; /* Adjust the distance from the left edge */
+    left: 1.5rem;
   }
   
   .next-arrow {
-    right: 1.5rem; /* Adjust the distance from the right edge */
+    right: 1.5rem;
   }
   
+
+  /* Loader */
   .loader {
-    border-top-color: #1fc16b; /* Spinner color */
+    border-top-color: #1fc16b;
     animation: spin 1s linear infinite;
   }
   

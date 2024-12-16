@@ -1,5 +1,12 @@
 import { apiLogin } from '../api/auth.js';
 
+/**
+ * Logs in the user with the provided credentials and stores the access token.
+ * 
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password.
+ * @returns {Promise<boolean>} - Returns `true` if login is successful, otherwise `false`.
+ */
 export async function loginUser(email, password) {
   const response = await apiLogin({ email, password });
   if (response.accessToken) {
@@ -9,7 +16,12 @@ export async function loginUser(email, password) {
   return false;
 }
 
-
+/**
+ * Checks if the user is logged in by checking the access token.
+ * If the user is not logged in, a modal is displayed telling the user to log in or register.
+ * 
+ * @throws {Error} Throws an error if the user is not logged in.
+ */
  export function checkIfLoggedIn() {
   const userToken = localStorage.getItem("accessToken");
 

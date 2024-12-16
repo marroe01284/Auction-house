@@ -2,6 +2,9 @@ import { API_BASE } from "../api/constants.js";
 import { placeBid } from "../api/auctions.js";
 import { loadAuctions } from "../scripts/auction.js";
 
+/**
+ * Closes the modal and resets bid history.
+ */
 function closeModal() {
   const modal = document.getElementById("auction-modal");
   const bidHistoryContainer = document.getElementById("bid-history");
@@ -18,10 +21,18 @@ function closeModal() {
   modal.classList.add("hidden");
 }
 
+/**
+ * Checks if the user is logged in.
+ * @returns {boolean} - True if the user is logged in, otherwise false.
+ */
 function isUserLoggedIn() {
-  return Boolean(localStorage.getItem("userName")); // Adjust key based on your localStorage setup
+  return Boolean(localStorage.getItem("userName"));
 }
 
+/**
+ * Loads auction details into a modal for display.
+ * @param {string} auctionId - The ID of the auction to fetch details for.
+ */
 export async function loadAuctionDetails(auctionId) {
   try {
     const modal = document.getElementById("auction-modal");
@@ -34,7 +45,7 @@ export async function loadAuctionDetails(auctionId) {
     const bidHistoryContainer = document.getElementById("bid-history");
     const modalAction = document.getElementById("auction-modal-action");
 
-    // Reset modal content
+    // Reset modal
     auctionTitle.textContent = "";
     auctionDescription.textContent = "";
     auctionImage.src = "";
@@ -44,7 +55,7 @@ export async function loadAuctionDetails(auctionId) {
 
     modal.classList.add("active");
 
-    // Fetch auction details
+    // Fetch auction det
     const url = `${API_BASE}/auction/listings/${auctionId}?_bids=true&_seller=true`;
     const response = await fetch(url);
     if (!response.ok) {
@@ -71,25 +82,25 @@ export async function loadAuctionDetails(auctionId) {
     bidHistoryContainer.innerHTML =
       latestBids.length > 0
         ? latestBids
-            .map(
-              (bid) => `
+          .map(
+            (bid) => `
           <div class="mb-3 last:mb-0">
             <p class="text-sm font-medium">${bid.bidder?.name || "Unknown"}</p>
             <p class="text-sm text-gray-600">Bid: $${bid.amount}</p>
           </div>
         `
-            )
-            .join("")
+          )
+          .join("")
         : "<p class='text-sm text-gray-600'>No bids yet.</p>";
 
-    // Clear previous bid input
+    
     bidInput.value = "";
 
     // Add place bid functionality
     modalAction.onclick = async () => {
       if (!isUserLoggedIn()) {
         alert("You need to be logged in to place a bid.");
-        return; // Stop further execution if user is not logged in
+        return;
       }
       const bidAmount = parseFloat(bidInput.value);
       if (isNaN(bidAmount) || bidAmount <= 0) {
@@ -100,15 +111,17 @@ export async function loadAuctionDetails(auctionId) {
       try {
         await placeBid(auctionId, bidAmount);
         alert("Bid placed successfully!");
-        closeModal();
-        loadAuctions(); // Reload auctions
+        setTimeout(() => {
+          closeModal();
+          loadAuctions();
+        }, 500);
       } catch (error) {
         console.error("Failed to place bid:", error);
         alert("Failed to place bid. Please try again.");
       }
     };
 
-    // Attach event listener to toggle bid history
+    //togl bid history
     const toggleBidHistoryButton = document.getElementById("toggle-bid-history");
     const arrowIcon = toggleBidHistoryButton.querySelector(".arrow-icon");
 
@@ -116,27 +129,22 @@ export async function loadAuctionDetails(auctionId) {
       const isExpanded = bidHistoryContainer.classList.contains("max-h-[500px]");
 
       if (isExpanded) {
-        // Collapse bid history
         bidHistoryContainer.classList.remove("max-h-[500px]");
         bidHistoryContainer.classList.add("max-h-0");
       } else {
-        // Expand bid history
         bidHistoryContainer.classList.remove("max-h-0");
         bidHistoryContainer.classList.add("max-h-[500px]");
       }
-
-      // Rotate the arrow icon
       arrowIcon.classList.toggle("rotate-180");
     };
 
-    // Show the modal
+
     modal.classList.remove("hidden");
   } catch (error) {
     console.error("Failed to load auction details:", error);
     alert("Could not load auction details. Please try again.");
   }
 }
-
 
 document.getElementById("auction-modal-close").addEventListener("click", closeModal);
 

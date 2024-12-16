@@ -42,7 +42,7 @@
             <input 
               type="url" 
               id="avatar-url" 
-              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-card-2 focus:outline-none" 
               placeholder="Enter new avatar URL"
             />
             <button type="submit" class="learn-more green">
@@ -51,6 +51,7 @@
               </span>
               <span class="button-text">Update</span>
             </button>
+            
           </div>
         </div>
       </form>
@@ -62,26 +63,26 @@
   
   <div class="stats-chart-container flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between gap-12 max-w-4xl mx-auto px-4">
 
-    <div class="stats-container grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 w-full lg:w-1/2">
-      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+    <div class="chart-container w-full lg:w-1/2">
+      <canvas id="stats-chart" class="w-full"></canvas>
+    </div>
+    <div class="stats-container">
+      <div class="stats-box text-center bg-gray-100 rounded-lg p-4 shadow mb-6">
         <h3 class="text-lg font-bold text-gray-600">Bids Won</h3>
         <p id="user-wins" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
-      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+      <div class="stats-box text-center bg-gray-100 rounded-lg p-4 shadow mb-6">
         <h3 class="text-lg font-bold text-gray-600">Total Listings</h3>
         <p id="user-bids" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
-      <div class="stats-box bg-gray-100 rounded-lg p-4 shadow">
+      <div class="stats-box text-center bg-gray-100 rounded-lg p-4 shadow">
         <h3 class="text-lg font-bold text-gray-600">Credits</h3>
         <p id="user-credits" class="text-2xl font-semibold text-gray-800">0</p>
       </div>
     </div>
+  </div>
   
 
-    <div class="chart-container w-full lg:w-1/2">
-      <canvas id="stats-chart" class="w-full"></canvas>
-    </div>
-  </div>
   <footer>
 
   </footer>

@@ -4,7 +4,9 @@ import { createFooter } from "../components/footer.js";
 import { checkIfLoggedIn } from "../modules/auth.js";
 const form = document.getElementById("create-listing-form");
 const message = document.getElementById("message");
-
+/**
+ * injects nav and footer.
+ */
 document.body.insertAdjacentHTML("afterbegin", createNavBar("user-avatar-url.png"));
 document.body.insertAdjacentHTML("afterend", createFooter());
 initializeNavBar();
